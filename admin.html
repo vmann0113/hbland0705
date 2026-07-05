@@ -227,10 +227,10 @@ class Component extends DCLogic {
     let saved=null; try{ saved=JSON.parse(localStorage.getItem(this.STORE_KEY)||'null'); }catch(e){}
     let ben={}; try{ ben=JSON.parse(localStorage.getItem(this.BEN_KEY)||'{}')||{}; }catch(e){}
     this.setState({ on: saved&&typeof saved==='object'? Object.assign(def,saved): def, ben });
-    this.loadLeads();
   }
   loadLeads(){
     if(this.state.leadsLoading) return;
+    if(!this._leadsArmed){ this._leadsArmed=true; this.setState({leadsErr:'조회를 켜기 전, 구글 Apps Script에 읽기(doGet action=list) 엔드포인트를 먼저 배포하세요. 배포 후 한 번 더 누르면 불러옵니다.'}); return; }
     this.setState({leadsLoading:true, leadsErr:''});
     var self=this, cb='__hbLeads_'+Date.now(), s=document.createElement('script'), done=false;
     window[cb]=function(data){ done=true; try{delete window[cb];}catch(e){} var arr=Array.isArray(data)?data:((data&&(data.rows||data.data))||[]); self.setState({leads:arr, leadsLoading:false}); if(s&&s.parentNode)s.parentNode.removeChild(s); };
@@ -270,7 +270,7 @@ class Component extends DCLogic {
       return { code:b.code, name:b.name, visits:b.visits, leads:b.leads, conv,
         playsText:isOn?String(b.plays):'—',
         url:'hanbeam.kr/'+b.code,
-        onOpen:(function(code){return function(){ try{ var f=encodeURIComponent('index.html'); var base=location.href.split('?')[0].replace(/[^\/]*$/, f); var qs=location.search; window.open(base+qs+(qs?'&':'?')+'b='+code, '_blank'); }catch(e){ location.search='?b='+code; } };})(b.code),
+        onOpen:(function(code){return function(){ try{ var f=encodeURIComponent('한빔한복 통합예약센터.dc.html'); var base=location.href.split('?')[0].replace(/[^\/]*$/, f); var qs=location.search; window.open(base+qs+(qs?'&':'?')+'b='+code, '_blank'); }catch(e){ location.search='?b='+code; } };})(b.code),
         onToggle:()=>this.toggle(b.code), onCopy:()=>this.copy('https://hanbeam.kr/'+b.code,b.code),
         copyLabel:this.state.copied===b.code?'복사됨 ✓':'URL 복사',
         dotStyle:{ background:isOn?'#2FA36B':'#6b6250', boxShadow:isOn?'0 0 0 4px rgba(47,163,107,0.16)':'none' },
@@ -317,7 +317,7 @@ class Component extends DCLogic {
       onBenSave:()=>this.saveBen(),
       onBenReset:()=>this.resetBen(bc),
       benSaved:this.state.benSaved,
-      benOpen:()=>{ try{ const f=encodeURIComponent('index.html'); const base=location.href.split('?')[0].replace(/[^\/]*$/, f); window.open(base+'?b='+bc,'_blank'); }catch(e){} },
+      benOpen:()=>{ try{ const f=encodeURIComponent('한빔한복 통합예약센터.dc.html'); const base=location.href.split('?')[0].replace(/[^\/]*$/, f); window.open(base+'?b='+bc,'_blank'); }catch(e){} },
       leadRows, recentLeads, leadsStatus, leadsErr:this.state.leadsErr,
       onLeadsReload:()=>this.loadLeads(),
     };
