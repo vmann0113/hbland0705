@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&display=swap">
+<style>
+@font-face{font-family:'Jalnan';font-display:swap;src:url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/Jalnan.woff') format('woff');}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{font-family:'Pretendard',sans-serif;background:#0A1D37;color:#F3ECE1;}
+.am-wrap{max-width:820px;margin:0 auto;padding:0 0 80px;}
+.am-hero{background:radial-gradient(120% 90% at 50% 0%, rgba(184,151,126,0.14), rgba(10,29,55,0) 60%);padding:34px 22px 26px;border-bottom:1px solid rgba(184,151,126,0.3);}
+.am-eyebrow{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;letter-spacing:0.22em;color:#B8977E;text-transform:uppercase;}
+.am-title{font-family:'Jalnan','Pretendard',sans-serif;font-size:clamp(24px,4vw,34px);color:#F5EFE4;margin:8px 0 4px;letter-spacing:-0.5px;}
+.am-note{font-size:13.5px;color:rgba(243,236,225,0.7);line-height:1.6;max-width:560px;}
+.am-note b{color:#E7CE93;}
+.am-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:22px 18px 0;}
+.am-stat{background:rgba(255,255,255,0.04);border:1px solid rgba(184,151,126,0.28);border-radius:10px;padding:14px 12px;text-align:center;}
+.am-stat .k{font-size:11.5px;color:rgba(243,236,225,0.6);font-weight:600;}
+.am-stat .v{font-family:'Jalnan','Pretendard',sans-serif;font-size:clamp(18px,3vw,26px);color:#F5EFE4;margin-top:4px;}
+.am-stat .v.gold{color:#E7CE93;}
+.am-tabs{display:flex;gap:8px;padding:22px 18px 6px;flex-wrap:wrap;}
+.am-tab{flex:1;min-width:120px;text-align:center;padding:12px 10px;border-radius:10px;border:1px solid rgba(184,151,126,0.35);background:transparent;color:rgba(243,236,225,0.72);font-weight:700;font-size:14px;cursor:pointer;transition:.18s;font-family:'Pretendard',sans-serif;}
+.am-tab.on{background:#B8977E;border-color:#B8977E;color:#0A1D37;}
+.am-body{padding:10px 18px 0;}
+.am-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 2px 14px;}
+.am-toolbar .lbl{font-size:13px;font-weight:700;color:rgba(243,236,225,0.66);}
+.am-toolbar .btns{display:flex;gap:7px;}
+.am-mini{border:1px solid rgba(184,151,126,0.4);background:transparent;color:#D8C4B2;font-size:12px;font-weight:700;padding:7px 12px;border-radius:8px;cursor:pointer;font-family:'Pretendard',sans-serif;}
+.am-mini.solid{background:#B8977E;border-color:#B8977E;color:#0A1D37;}
+.am-card{background:rgba(255,255,255,0.035);border:1px solid rgba(184,151,126,0.28);border-radius:14px;padding:15px 16px;margin-bottom:11px;}
+.am-row1{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.am-bl{display:flex;align-items:center;gap:11px;min-width:0;}
+.am-dot{width:9px;height:9px;border-radius:50%;flex:none;}
+.am-name{font-family:'Jalnan','Pretendard',sans-serif;font-size:17px;color:#F5EFE4;}
+.am-url{font-size:12px;color:#9fb0c9;font-family:ui-monospace,monospace;margin-top:2px;}
+.am-toggle{width:50px;height:29px;border-radius:999px;flex:none;cursor:pointer;position:relative;transition:.2s;display:flex;align-items:center;padding:3px;}
+.am-knob{width:23px;height:23px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3);}
+.am-r2{display:flex;align-items:center;gap:8px;margin-top:13px;}
+.am-status{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:7px;}
+.am-traffic{display:flex;margin-top:13px;border-top:1px solid rgba(184,151,126,0.2);padding-top:12px;}
+.am-tc{flex:1;text-align:center;}
+.am-tc .n{font-family:'Jalnan','Pretendard',sans-serif;font-size:16px;}
+.am-tc .l{font-size:10.5px;color:rgba(243,236,225,0.55);font-weight:600;margin-top:2px;}
+.am-tc .n.g{color:#E7CE93;}
+.am-tcsep{width:1px;background:rgba(184,151,126,0.2);}
+.am-imgsec{margin-bottom:11px;}
+.am-imgh{font-size:13px;font-weight:700;color:#D8C4B2;margin:0 2px 8px;}
+.am-slots{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.am-slotwrap{background:rgba(255,255,255,0.03);border:1px solid rgba(184,151,126,0.28);border-radius:10px;padding:9px;}
+.am-slotlbl{font-size:11.5px;color:rgba(243,236,225,0.6);font-weight:600;margin:2px 2px 7px;}
+.am-branchpick{display:flex;gap:7px;overflow-x:auto;padding:2px 2px 14px;}
+.am-chip{white-space:nowrap;padding:8px 14px;border-radius:999px;border:1px solid rgba(184,151,126,0.4);background:transparent;color:rgba(243,236,225,0.7);font-weight:700;font-size:13px;cursor:pointer;font-family:'Jalnan','Pretendard',sans-serif;}
+.am-chip.on{background:#0A1D37;border-color:#B8977E;color:#E7CE93;}
+image-slot{--is-bg:rgba(255,255,255,0.04);}
+.am-in{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(184,151,126,0.3);border-radius:8px;color:#F5EFE4;font-size:13px;padding:9px 11px;font-family:'Pretendard',sans-serif;margin-bottom:7px;}
+.am-in::placeholder{color:rgba(243,236,225,0.4);}
+.am-in:focus{outline:none;border-color:#B8977E;background:rgba(255,255,255,0.08);}
+.am-inrow{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.am-bcard{background:rgba(255,255,255,0.035);border:1px solid rgba(184,151,126,0.28);border-radius:12px;padding:13px 13px 10px;margin-bottom:10px;}
+.am-btag{display:inline-block;background:#0A1D37;border:1px solid rgba(184,151,126,0.5);color:#E7CE93;font-size:11.5px;font-weight:700;padding:3px 11px;border-radius:6px;margin-bottom:9px;font-family:'Cormorant Garamond',serif;font-style:italic;letter-spacing:0.06em;}
+.am-mini.rm{color:#e6a5a5;border-color:rgba(224,150,150,0.4);}
+.am-bprev{font-size:12px;color:rgba(243,236,225,0.55);line-height:1.5;font-family:ui-monospace,monospace;}
+.am-savebar{display:flex;gap:8px;align-items:center;position:sticky;bottom:0;background:linear-gradient(180deg,rgba(10,29,55,0),#0A1D37 42%);padding:16px 0 8px;margin-top:6px;}
+.am-savemsg{font-size:12.5px;color:#5fd39a;font-weight:700;}
+.am-hint{font-size:12px;color:rgba(243,236,225,0.55);line-height:1.6;margin:2px 2px 12px;}
+</style>
+<script src="assets/branches.js"></script>
+</helmet>
+<div class="am-wrap">
+  <div class="am-hero">
+    <div class="am-eyebrow">Hanbeam Admin</div>
+    <div class="am-title">한빔한복 통합 관리 시스템</div>
+    <div class="am-note">광고엔 <b>지점 URL 하나</b>만 붙이세요. <b>_r 구분 없이</b> 룰렛은 여기서 켜고 끕니다. 지점별 섹션 이미지 교체와 유입도 한 곳에서 관리합니다.</div>
+  </div>
+
+  <div class="am-stats">
+    <div class="am-stat"><div class="k">룰렛 ON</div><div class="v">{{ onCount }}<span style="font-size:13px;color:#7d8ba3;"> / {{ total }}</span></div></div>
+    <div class="am-stat"><div class="k">오늘 유입</div><div class="v">{{ totalVisits }}</div></div>
+    <div class="am-stat"><div class="k">룰렛 참여</div><div class="v">{{ totalPlays }}</div></div>
+    <div class="am-stat"><div class="k">예약 리드</div><div class="v gold">{{ totalLeads }}</div></div>
+  </div>
+
+  <div class="am-tabs">
+    <button class="{{ tabRouletteCls }}" onClick="{{ goRoulette }}">룰렛 · 링크</button>
+    <button class="{{ tabImagesCls }}" onClick="{{ goImages }}">지점별 이미지</button>
+    <button class="{{ tabBenefitsCls }}" onClick="{{ goBenefits }}">지점별 혜택</button>
+    <button class="{{ tabTrafficCls }}" onClick="{{ goTraffic }}">당첨 · 리드</button>
+  </div>
+
+  <div class="am-body">
+
+    <sc-if value="{{ isRoulette }}" hint-placeholder-val="{{ true }}">
+      <div class="am-toolbar">
+        <span class="lbl">지점 {{ total }}곳 · 룰렛 노출 제어</span>
+        <span class="btns"><button class="am-mini solid" onClick="{{ allOn }}">모두 ON</button><button class="am-mini" onClick="{{ allOff }}">모두 OFF</button></span>
+      </div>
+      <sc-for list="{{ rows }}" as="b" hint-placeholder-count="11">
+        <div class="am-card">
+          <div class="am-row1">
+            <div class="am-bl">
+              <span class="am-dot" style="{{ b.dotStyle }}"></span>
+              <div style="min-width:0;">
+                <div class="am-name">{{ b.name }}</div>
+                <div class="am-url">{{ b.url }}</div>
+              </div>
+            </div>
+            <div class="am-toggle" style="{{ b.trackStyle }}" onClick="{{ b.onToggle }}"><div class="am-knob" style="{{ b.knobStyle }}"></div></div>
+          </div>
+          <div class="am-r2">
+            <span class="am-status" style="{{ b.statusStyle }}">{{ b.statusText }}</span>
+            <span style="flex:1;"></span>
+            <button class="am-mini" onClick="{{ b.onCopy }}">{{ b.copyLabel }}</button>
+            <button class="am-mini" onClick="{{ b.onOpen }}">열기</button>
+          </div>
+        </div>
+      </sc-for>
+    </sc-if>
+
+    <sc-if value="{{ isImages }}" hint-placeholder-val="{{ false }}">
+      <div class="am-toolbar"><span class="lbl">지점을 선택하고 섹션 이미지를 교체하세요</span></div>
+      <div class="am-branchpick">
+        <sc-for list="{{ chips }}" as="c" hint-placeholder-count="11">
+          <button class="{{ c.cls }}" onClick="{{ c.onPick }}">{{ c.name }}</button>
+        </sc-for>
+      </div>
+      <sc-for list="{{ imgSections }}" as="s" hint-placeholder-count="4">
+        <div class="am-imgsec">
+          <div class="am-imgh">{{ s.label }}</div>
+          <div class="am-slotwrap">
+            <image-slot id="{{ s.slotId }}" placeholder="{{ s.ph }}" shape="rect" style="display:block;width:100%;height:150px;"></image-slot>
+          </div>
+        </div>
+      </sc-for>
+    </sc-if>
+
+    <sc-if value="{{ isBenefits }}" hint-placeholder-val="{{ false }}">
+      <div class="am-toolbar"><span class="lbl">지점을 선택하고 히어로 혜택을 편집하세요</span></div>
+      <div class="am-branchpick">
+        <sc-for list="{{ benChips }}" as="c" hint-placeholder-count="9">
+          <button class="{{ c.cls }}" onClick="{{ c.onPick }}">{{ c.name }}</button>
+        </sc-for>
+      </div>
+      <div class="am-hint">정가는 비우면 취소선 없이 표시됩니다. 혜택 강조 안의 숫자는 자동으로 크게 표시됩니다.</div>
+      <sc-for list="{{ benEvents }}" as="e" hint-placeholder-count="3">
+        <div class="am-bcard">
+          <span class="am-btag">이벤트 {{ e.roman }}</span>
+          <input class="am-in" placeholder="항목 (예: 웨딩촬영용 한복 대여)" value="{{ e.label }}" onInput="{{ e.onLabel }}">
+          <div class="am-inrow">
+            <input class="am-in" placeholder="정가 취소선 (선택, 예: 20만원)" value="{{ e.before }}" onInput="{{ e.onBefore }}">
+            <input class="am-in" placeholder="혜택 강조 (예: 11만원)" value="{{ e.hot }}" onInput="{{ e.onHot }}">
+          </div>
+          <input class="am-in" placeholder="뒤 일반문구 (선택, 예: 서비스)" value="{{ e.tail }}" onInput="{{ e.onTail }}">
+          <div class="am-r2"><span class="am-bprev">{{ e.preview }}</span><span style="flex:1;"></span><button class="am-mini rm" onClick="{{ e.onRemove }}">삭제</button></div>
+        </div>
+      </sc-for>
+      <button class="am-mini" onClick="{{ onBenAdd }}">+ 이벤트 추가</button>
+      <div class="am-imgh" style="margin-top:16px;">하단 문구 (선택)</div>
+      <input class="am-in" placeholder="예: 원단·라벨·종류 상관없이 &lt;b&gt;추가금 NO!&lt;/b&gt;" value="{{ benNote }}" onInput="{{ onBenNote }}">
+      <div class="am-savebar">
+        <button class="am-mini solid" onClick="{{ onBenSave }}">저장</button>
+        <button class="am-mini" onClick="{{ onBenReset }}">기본값 복원</button>
+        <span class="am-savemsg">{{ benSaved }}</span>
+        <span style="flex:1;"></span>
+        <button class="am-mini" onClick="{{ benOpen }}">미리보기</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isTraffic }}" hint-placeholder-val="{{ false }}">
+      <div class="am-toolbar">
+        <span class="lbl">{{ leadsStatus }}</span>
+        <span class="btns"><button class="am-mini solid" onClick="{{ onLeadsReload }}">새로고침</button></span>
+      </div>
+      <sc-if value="{{ leadsErr }}" hint-placeholder-val="{{ false }}">
+        <div class="am-hint" style="color:#e6a5a5;">{{ leadsErr }} · 구글 시트 읽기 엔드포인트 배포를 확인하세요.</div>
+      </sc-if>
+      <div class="am-imgh">지점별 리드(신청) 건수</div>
+      <sc-for list="{{ leadRows }}" as="b" hint-placeholder-count="9">
+        <div class="am-card">
+          <div class="am-row1"><div class="am-bl"><span class="am-dot" style="{{ b.dotStyle }}"></span><div class="am-name">{{ b.name }}</div></div><div class="am-name" style="color:#E7CE93;">{{ b.cnt }}</div></div>
+        </div>
+      </sc-for>
+      <div class="am-imgh" style="margin-top:16px;">최근 신청 내역</div>
+      <sc-for list="{{ recentLeads }}" as="r" hint-placeholder-count="6">
+        <div class="am-card">
+          <div class="am-row1"><div class="am-bl"><div style="min-width:0;"><div class="am-name" style="font-size:15px;">{{ r.name }}</div><div class="am-url">{{ r.sub }}</div></div></div></div>
+        </div>
+      </sc-for>
+    </sc-if>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:412,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  BRANCHES = [
+    { code:'bs', name:'부산/센텀', visits:360, plays:258, leads:58 },
+    { code:'cm', name:'창원/마산', visits:184, plays:135, leads:28 },
+    { code:'us', name:'울산점', visits:110, plays:79, leads:17 },
+    { code:'gh', name:'김해점', visits:95, plays:70, leads:14 },
+    { code:'ys', name:'양산점', visits:72, plays:0, leads:9 },
+    { code:'jj', name:'진주점', visits:58, plays:41, leads:7 },
+    { code:'ic', name:'인천점', visits:63, plays:44, leads:8 },
+    { code:'as', name:'안산점', visits:84, plays:61, leads:12 },
+    { code:'dg', name:'대구점', visits:76, plays:0, leads:6 },
+  ];
+  IMG_SECTIONS = [
+    { key:'hero', label:'① 히어로 (이벤트 배너)', ph:'히어로 이미지' },
+    { key:'store', label:'③ 매장 소개 사진', ph:'매장 사진' },
+    { key:'acc', label:'④ 악세사리 인물 사진', ph:'인물 사진' },
+    { key:'rack', label:'⑤ 한복 종류 사진', ph:'한복 행거 사진' },
+  ];
+  STORE_KEY = 'hbBranchRoulette';
+  BEN_KEY = 'hbBranchBenefits';
+  GAS_URL = 'https://script.google.com/macros/s/AKfycbxJwTVpsdJ64hihl9yV9yM5NpNVVL1_AN57_5UsGl8VIiP1RyORXmKOooDc609LO2E5/exec';
+  state = { tab:'roulette', on:{}, copied:'', imgBranch:'bs', benBranch:'bs', ben:{}, benSaved:'', leads:null, leadsLoading:false, leadsErr:'' };
+
+  componentDidMount(){
+    const def={}; this.BRANCHES.forEach(b=>def[b.code]= b.code!=='dg');
+    let saved=null; try{ saved=JSON.parse(localStorage.getItem(this.STORE_KEY)||'null'); }catch(e){}
+    let ben={}; try{ ben=JSON.parse(localStorage.getItem(this.BEN_KEY)||'{}')||{}; }catch(e){}
+    this.setState({ on: saved&&typeof saved==='object'? Object.assign(def,saved): def, ben });
+    this.loadLeads();
+  }
+  loadLeads(){
+    if(this.state.leadsLoading) return;
+    this.setState({leadsLoading:true, leadsErr:''});
+    var self=this, cb='__hbLeads_'+Date.now(), s=document.createElement('script'), done=false;
+    window[cb]=function(data){ done=true; try{delete window[cb];}catch(e){} var arr=Array.isArray(data)?data:((data&&(data.rows||data.data))||[]); self.setState({leads:arr, leadsLoading:false}); if(s&&s.parentNode)s.parentNode.removeChild(s); };
+    s.src=this.GAS_URL+(this.GAS_URL.indexOf('?')>=0?'&':'?')+'action=list&callback='+cb;
+    s.onerror=function(){ self.setState({leadsLoading:false, leadsErr:'불러오기 실패'}); if(s&&s.parentNode)s.parentNode.removeChild(s); };
+    document.body.appendChild(s);
+    setTimeout(function(){ if(!done){ try{delete window[cb];}catch(e){} self.setState(function(st){ return st.leads?{leadsLoading:false}:{leadsLoading:false, leadsErr:'응답 없음'}; }); } },9000);
+  }
+  _mask(n){ n=String(n||'').trim(); if(n.length<=1)return n||'—'; if(n.length===2)return n.charAt(0)+'*'; return n.charAt(0)+Array(n.length-1).join('*')+n.charAt(n.length-1); }
+  persist(on){ try{ localStorage.setItem(this.STORE_KEY, JSON.stringify(on)); }catch(e){} }
+  toggle(code){ this.setState(s=>{ const on=Object.assign({},s.on,{[code]:!s.on[code]}); this.persist(on); return {on}; }); }
+  setAll(v){ const on={}; this.BRANCHES.forEach(b=>on[b.code]=v); this.persist(on); this.setState({on}); }
+  copy(url,code){ const done=()=>{ this.setState({copied:code}); clearTimeout(this._t); this._t=setTimeout(()=>this.setState({copied:''}),1400); };
+    try{ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(done).catch(()=>this.fb(url,done)); } else this.fb(url,done); }catch(e){ this.fb(url,done); } }
+  fb(t,done){ try{ const a=document.createElement('textarea'); a.value=t; a.style.position='fixed'; a.style.opacity='0'; document.body.appendChild(a); a.select(); document.execCommand('copy'); document.body.removeChild(a);}catch(e){} done(); }
+
+  defaultBen(code){
+    const D=(typeof window!=='undefined'&&window.HB_BENEFITS_DATA)||{};
+    const src=D[code]||D._default||{ events:[{label:'',before:'',hot:'',tail:''}], note:'' };
+    return JSON.parse(JSON.stringify(src));
+  }
+  curBen(code){ return this.state.ben[code]?this.state.ben[code]:this.defaultBen(code); }
+  setBen(code,data){ this.setState(s=>{ const ben=Object.assign({},s.ben); ben[code]=data; return {ben, benSaved:''}; }); }
+  updEvent(code,idx,field,val){ const d=JSON.parse(JSON.stringify(this.curBen(code))); if(!d.events[idx])return; d.events[idx][field]=val; this.setBen(code,d); }
+  addEvent(code){ const d=JSON.parse(JSON.stringify(this.curBen(code))); if(d.events.length<5) d.events.push({label:'',before:'',hot:'',tail:''}); this.setBen(code,d); }
+  rmEvent(code,idx){ const d=JSON.parse(JSON.stringify(this.curBen(code))); d.events.splice(idx,1); this.setBen(code,d); }
+  updNote(code,val){ const d=JSON.parse(JSON.stringify(this.curBen(code))); d.note=val; this.setBen(code,d); }
+  saveBen(){ const src=this.state.ben||{}; const clean={}; Object.keys(src).forEach(function(code){ const d=src[code]; if(!d)return; const evs=(d.events||[]).filter(function(e){ return (e.label&&e.label.trim())||(e.hot&&e.hot.trim()); }); clean[code]={ events:evs, note:d.note||'' }; }); try{ localStorage.setItem(this.BEN_KEY, JSON.stringify(clean)); }catch(e){} this.setState({ben:clean, benSaved:'저장됨 ✓ · 공개페이지 새로고침 시 반영'}); clearTimeout(this._bt); this._bt=setTimeout(()=>this.setState({benSaved:''}),2400); }
+  resetBen(code){ this.setState(s=>{ const ben=Object.assign({},s.ben); delete ben[code]; try{ localStorage.setItem(this.BEN_KEY, JSON.stringify(ben)); }catch(e){} return {ben, benSaved:'기본값으로 복원됨'}; }); clearTimeout(this._bt); this._bt=setTimeout(()=>this.setState({benSaved:''}),2400); }
+
+  renderVals(){
+    const on=this.state.on||{}; const accent='#B8977E';
+    let onCount=0, totalVisits=0, totalPlays=0, totalLeads=0;
+    const rows=this.BRANCHES.map(b=>{
+      const isOn=!!on[b.code]; if(isOn)onCount++; totalVisits+=b.visits; totalLeads+=b.leads; if(isOn)totalPlays+=b.plays;
+      const conv=b.visits? Math.round((b.leads/b.visits)*100)+'%':'—';
+      return { code:b.code, name:b.name, visits:b.visits, leads:b.leads, conv,
+        playsText:isOn?String(b.plays):'—',
+        url:'hanbeam.kr/'+b.code,
+        onOpen:(function(code){return function(){ try{ var f=encodeURIComponent('index.html'); var base=location.href.split('?')[0].replace(/[^\/]*$/, f); var qs=location.search; window.open(base+qs+(qs?'&':'?')+'b='+code, '_blank'); }catch(e){ location.search='?b='+code; } };})(b.code),
+        onToggle:()=>this.toggle(b.code), onCopy:()=>this.copy('https://hanbeam.kr/'+b.code,b.code),
+        copyLabel:this.state.copied===b.code?'복사됨 ✓':'URL 복사',
+        dotStyle:{ background:isOn?'#2FA36B':'#6b6250', boxShadow:isOn?'0 0 0 4px rgba(47,163,107,0.16)':'none' },
+        trackStyle:{ background:isOn?accent:'rgba(255,255,255,0.14)', justifyContent:isOn?'flex-end':'flex-start' },
+        knobStyle:{},
+        statusText:isOn?'룰렛 ON · 이벤트 노출':'룰렛 OFF · 일반 랜딩',
+        statusStyle:{ background:isOn?'rgba(47,163,107,0.16)':'rgba(255,255,255,0.06)', color:isOn?'#5fd39a':'rgba(243,236,225,0.55)' },
+      };
+    });
+    const cur=this.state.imgBranch;
+    const bc=this.state.benBranch; const curB=this.curBen(bc); const _roman=['Ⅰ','Ⅱ','Ⅲ','Ⅳ','Ⅴ'];
+    const _leads=this.state.leads; const _mask=this._mask.bind(this);
+    const leadRows=this.BRANCHES.map(function(b){ var cfg=(window.HB_BRANCHES&&window.HB_BRANCHES[b.code])||{}; var names=cfg.dual||[cfg.name||b.name]; var cnt=_leads?_leads.filter(function(L){return names.indexOf(L.branch)>=0;}).length:null; return { name:b.name, cnt: cnt==null?'—':String(cnt), dotStyle:{background:'#B8977E'} }; });
+    const recentLeads=_leads?_leads.slice().reverse().slice(0,30).map(function(L){ var tm=L.time||L.timestamp||L.date||''; return { name:_mask(L.name)+' · '+(L.branch||''), sub:(L.prize||'—')+(tm?' · '+tm:'') }; }):[];
+    const leadsStatus=this.state.leadsLoading?'불러오는 중…':(_leads?('총 '+_leads.length+'건 수집'):'데이터 불러오기');
+    return {
+      total:this.BRANCHES.length, onCount, totalVisits, totalPlays, totalLeads,
+      rows,
+      isRoulette:this.state.tab==='roulette', isImages:this.state.tab==='images', isTraffic:this.state.tab==='traffic',
+      tabRouletteCls:'am-tab'+(this.state.tab==='roulette'?' on':''),
+      tabImagesCls:'am-tab'+(this.state.tab==='images'?' on':''),
+      tabTrafficCls:'am-tab'+(this.state.tab==='traffic'?' on':''),
+      goRoulette:()=>this.setState({tab:'roulette'}), goImages:()=>this.setState({tab:'images'}), goTraffic:()=>this.setState({tab:'traffic'}),
+      allOn:()=>this.setAll(true), allOff:()=>this.setAll(false),
+      chips:this.BRANCHES.map(b=>({ name:b.name.replace('점(본점)','').replace('점',''), cls:'am-chip'+(cur===b.code?' on':''), onPick:()=>this.setState({imgBranch:b.code}) })),
+      imgSections:this.IMG_SECTIONS.map(s=>({ label:s.label, ph:s.ph, slotId:'hbimg-'+cur+'-'+s.key })),
+      isBenefits:this.state.tab==='benefits',
+      tabBenefitsCls:'am-tab'+(this.state.tab==='benefits'?' on':''),
+      goBenefits:()=>this.setState({tab:'benefits'}),
+      benBranch:bc,
+      benChips:this.BRANCHES.map(b=>({ name:b.name.replace('점(본점)','').replace('점',''), cls:'am-chip'+(bc===b.code?' on':''), onPick:()=>this.setState({benBranch:b.code}) })),
+      benEvents:(curB.events||[]).map((ev,idx)=>({
+        roman:_roman[idx]||String(idx+1), label:ev.label||'', before:ev.before||'', hot:ev.hot||'', tail:ev.tail||'',
+        preview:(ev.before?ev.before+' → ':'')+(ev.hot||'')+(ev.tail||''),
+        onLabel:(e)=>this.updEvent(bc,idx,'label',e.target.value),
+        onBefore:(e)=>this.updEvent(bc,idx,'before',e.target.value),
+        onHot:(e)=>this.updEvent(bc,idx,'hot',e.target.value),
+        onTail:(e)=>this.updEvent(bc,idx,'tail',e.target.value),
+        onRemove:()=>this.rmEvent(bc,idx),
+      })),
+      benNote:curB.note||'',
+      onBenNote:(e)=>this.updNote(bc,e.target.value),
+      onBenAdd:()=>this.addEvent(bc),
+      onBenSave:()=>this.saveBen(),
+      onBenReset:()=>this.resetBen(bc),
+      benSaved:this.state.benSaved,
+      benOpen:()=>{ try{ const f=encodeURIComponent('index.html'); const base=location.href.split('?')[0].replace(/[^\/]*$/, f); window.open(base+'?b='+bc,'_blank'); }catch(e){} },
+      leadRows, recentLeads, leadsStatus, leadsErr:this.state.leadsErr,
+      onLeadsReload:()=>this.loadLeads(),
+    };
+  }
+}
+</script>
+</body>
+</html>
