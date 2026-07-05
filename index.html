@@ -19,7 +19,7 @@
 body{ margin:0; font-family:'Pretendard',sans-serif; background-color:#dcdce2; min-height:100vh; }
 .main-wrapper{ width:100%; max-width:var(--pc-max-width); margin:0 auto; background-color:var(--hb-bg-gray); min-height:100vh; box-shadow:0 0 50px rgba(10,29,55,0.16); }
 .hero-feed > img{ width:100%; height:auto; display:block; }
-.hb-hero{ position:relative; width:100%; aspect-ratio:1/1.32; overflow:hidden; background:radial-gradient(140% 115% at 12% 6%, rgba(255,251,244,0.95), transparent 46%), linear-gradient(165deg,#f5f2ec 0%,#eef0f5 58%,#e5e8f0 100%); border-bottom:1px solid rgba(184,151,126,0.4); }
+.hb-hero{ position:relative; width:100%; aspect-ratio:1/1.32; overflow:hidden; container-type:inline-size; background:radial-gradient(140% 115% at 12% 6%, rgba(255,251,244,0.95), transparent 46%), linear-gradient(165deg,#f5f2ec 0%,#eef0f5 58%,#e5e8f0 100%); border-bottom:1px solid rgba(184,151,126,0.4); }
 .hb-hero::before{ content:''; position:absolute; inset:9px; border:1px solid rgba(184,151,126,0.5); pointer-events:none; z-index:3; }
 .hb-hero::after{ content:''; position:absolute; inset:9px; pointer-events:none; z-index:3; background:
   linear-gradient(#B8977E,#B8977E) left 9px top 9px/16px 1px no-repeat,
@@ -30,8 +30,8 @@ body{ margin:0; font-family:'Pretendard',sans-serif; background-color:#dcdce2; m
   linear-gradient(#B8977E,#B8977E) left 9px bottom 9px/1px 16px no-repeat,
   linear-gradient(#B8977E,#B8977E) right 9px bottom 9px/16px 1px no-repeat,
   linear-gradient(#B8977E,#B8977E) right 9px bottom 9px/1px 16px no-repeat; }
-.hb-hero-model{ position:absolute; right:-19%; top:17%; width:clamp(360px,86%,700px); height:auto; object-fit:contain; object-position:top center; pointer-events:none; z-index:1; opacity:0.97; filter:drop-shadow(0 26px 34px rgba(10,29,55,0.14)); -webkit-mask-image:linear-gradient(to bottom,#000 80%,transparent 97%); mask-image:linear-gradient(to bottom,#000 80%,transparent 97%); }
-.hb-hero-in{ position:relative; z-index:2; height:100%; padding:clamp(15px,4vw,28px) clamp(18px,4.8vw,34px) clamp(18px,4.4vw,32px); display:flex; flex-direction:column; }
+.hb-hero-model{ position:absolute; right:-19%; top:17%; width:86cqw; height:auto; object-fit:contain; object-position:top center; pointer-events:none; z-index:1; opacity:0.97; filter:drop-shadow(0 26px 34px rgba(10,29,55,0.14)); -webkit-mask-image:linear-gradient(to bottom,#000 80%,transparent 97%); mask-image:linear-gradient(to bottom,#000 80%,transparent 97%); }
+.hb-hero-in{ position:relative; z-index:2; height:100%; padding:5.83cqw 7.08cqw 6.67cqw; display:flex; flex-direction:column; }
 .hb-logo-img{ height:auto; width:clamp(108px,25vw,158px); display:block; }
 .hb-logo{ font-family:'Jalnan','Pretendard',sans-serif; font-size:clamp(18px,4.2vw,27px); color:#0A1D37; letter-spacing:-0.5px; line-height:1.1; }
 .hb-logo .en{ display:block; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(9px,2.1vw,12px); letter-spacing:0.28em; color:#B8977E; margin-top:2px; }
@@ -56,32 +56,32 @@ body{ margin:0; font-family:'Pretendard',sans-serif; background-color:#dcdce2; m
 .hb-period b{ color:#8a3d8f; }
 .hb-cd{ display:inline-block; margin-left:6px; background:#8a3d8f; color:#fff; font-weight:700; font-size:0.9em; padding:2px 9px; border-radius:100px; letter-spacing:0; white-space:nowrap; font-variant-numeric:tabular-nums; }
 /* --- magazine cover hero --- */
-.mag-top{ display:flex; align-items:center; justify-content:space-between; gap:12px; font-family:'Cormorant Garamond',serif; font-size:clamp(9px,2vw,12px); font-weight:500; letter-spacing:0.3em; color:#a99a86; text-transform:uppercase; }
+.mag-top{ display:flex; align-items:center; justify-content:space-between; gap:2.5cqw; font-family:'Cormorant Garamond',serif; font-size:2.5cqw; font-weight:500; letter-spacing:0.3em; color:#a99a86; text-transform:uppercase; }
 .mag-top .r{ color:#8a8578; letter-spacing:0.16em; font-family:'Pretendard',sans-serif; font-size:0.78em; font-weight:500; }
-.mag-hair{ height:1px; background:linear-gradient(90deg,rgba(184,151,126,0),rgba(184,151,126,0.6) 15%,rgba(184,151,126,0.6) 85%,rgba(184,151,126,0)); margin-top:clamp(8px,1.8vw,12px); }
-.mag-mast{ text-align:left; margin-top:clamp(9px,2vw,15px); padding:clamp(2px,0.6vw,5px) 0; }
-.mag-mast-logo{ display:block; height:auto; width:clamp(118px,29vw,182px); }
+.mag-hair{ height:1px; background:linear-gradient(90deg,rgba(184,151,126,0),rgba(184,151,126,0.6) 15%,rgba(184,151,126,0.6) 85%,rgba(184,151,126,0)); margin-top:2.5cqw; }
+.mag-mast{ text-align:left; margin-top:3.13cqw; padding:1.04cqw 0; }
+.mag-mast-logo{ display:block; height:auto; width:37.9cqw; }
 .mag-mast-kr{ font-family:'Noto Serif KR',serif; font-weight:700; font-size:clamp(31px,8.6vw,54px); color:#0A1D37; letter-spacing:0.06em; line-height:1; }
 .mag-mast-en{ font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(10px,2.4vw,14px); letter-spacing:0.4em; color:#B8977E; margin-top:clamp(3px,0.8vw,6px); padding-left:0.4em; }
 .mag-cover{ margin-top:auto; max-width:100%; }
 .mag-title, .mag-foot{ max-width:64%; }
 .mag-eyebrow{ white-space:nowrap; }
-.mag-eyebrow{ display:inline-flex; align-items:center; gap:11px; font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:500; font-size:clamp(13px,3.2vw,17px); letter-spacing:0.24em; color:#B8977E; text-transform:uppercase; text-shadow:0 1px 8px rgba(247,245,240,0.9); }
-.mag-eyebrow::before{ content:''; width:clamp(20px,5vw,34px); height:1px; background:#B8977E; display:inline-block; }
+.mag-eyebrow{ display:inline-flex; align-items:center; gap:2.29cqw; font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:500; font-size:3.54cqw; letter-spacing:0.24em; color:#B8977E; text-transform:uppercase; text-shadow:0 1px 8px rgba(247,245,240,0.9); }
+.mag-eyebrow::before{ content:''; width:7.08cqw; height:1px; background:#B8977E; display:inline-block; }
 .mag-eyebrow::after{ content:''; width:5px; height:5px; background:#B8977E; transform:rotate(45deg); display:inline-block; opacity:0.85; }
-.mag-title{ font-family:'Noto Serif KR',serif; font-weight:600; font-size:clamp(28px,6.6vw,40px); color:#12224a; line-height:1.26; letter-spacing:-0.01em; margin-top:clamp(9px,1.9vw,14px); word-break:keep-all; text-shadow:0 2px 14px rgba(247,245,240,0.85); }
+.mag-title{ font-family:'Noto Serif KR',serif; font-weight:600; font-size:8.33cqw; color:#12224a; line-height:1.26; letter-spacing:-0.01em; margin-top:2.92cqw; word-break:keep-all; text-shadow:0 2px 14px rgba(247,245,240,0.85); }
 .mag-title .g{ color:#8a3d8f; }
-.mag-lines{ margin-top:clamp(12px,2.4vw,16px); width:min(100%,360px); display:flex; flex-direction:column; gap:clamp(8px,1.7vw,11px); padding:clamp(9px,1.8vw,12px) clamp(14px,3vw,18px); margin-left:calc(-1 * clamp(14px,3vw,18px)); background:linear-gradient(90deg,rgba(255,255,255,0.97) 0%,rgba(255,255,255,0.94) 48%,rgba(255,255,255,0.62) 80%,rgba(255,255,255,0) 100%); }4vw,22px)); background:linear-gradient(90deg,rgba(255,255,255,0.97) 0%,rgba(255,255,255,0.94) 48%,rgba(255,255,255,0.62) 80%,rgba(255,255,255,0) 100%); }
+.mag-lines{ margin-top:3.33cqw; width:75cqw; display:flex; flex-direction:column; gap:2.29cqw; padding:2.5cqw 3.75cqw; margin-left:-3.75cqw; background:linear-gradient(90deg,rgba(255,255,255,0.97) 0%,rgba(255,255,255,0.94) 48%,rgba(255,255,255,0.62) 80%,rgba(255,255,255,0) 100%); }
 .ev-block{ display:flex; flex-direction:column; }
-.ev-head{ display:flex; align-items:center; gap:9px; }
-.ev-tag{ flex:none; background:#0A1D37; color:#fff; font-family:'Pretendard',sans-serif; font-size:clamp(11px,2.5vw,13px); font-weight:700; letter-spacing:0.01em; padding:3px 12px; border-radius:4px; white-space:nowrap; box-shadow:0 2px 8px rgba(10,29,55,0.22); }
+.ev-head{ display:flex; align-items:center; gap:1.88cqw; }
+.ev-tag{ flex:none; background:#0A1D37; color:#fff; font-family:'Pretendard',sans-serif; font-size:2.71cqw; font-weight:700; letter-spacing:0.01em; padding:0.63cqw 2.5cqw; border-radius:4px; white-space:nowrap; box-shadow:0 2px 8px rgba(10,29,55,0.22); }
 .ev-tag .rn{ margin-left:4px; color:#C9A986; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.08em; }
 .ev-line{ flex:1; height:1px; background:linear-gradient(90deg,rgba(10,29,55,0.35),rgba(184,151,126,0)); }
-.mag-label{ margin-top:clamp(4px,1vw,7px); padding-left:12px; text-align:left; font-family:'Pretendard',sans-serif; font-size:clamp(14px,3.4vw,18px); font-weight:700; color:#12224a; letter-spacing:-0.02em; line-height:1.15; white-space:nowrap; }
-.mag-benefit{ margin-top:clamp(2px,0.5vw,4px); text-align:right; font-family:'Pretendard',sans-serif; font-style:italic; font-size:clamp(18px,4.6vw,24px); font-weight:800; color:#12224a; letter-spacing:-0.02em; line-height:1.05; white-space:nowrap; text-shadow:0 1px 8px rgba(255,255,255,0.95),0 1px 3px rgba(255,255,255,0.95); }
-.ev-block.tight .mag-benefit{ margin-top:-10px; }
-.ev-block.lead .mag-benefit{ font-size:clamp(21px,5.4vw,29px); }
-.mag-note{ margin-top:clamp(9px,2vw,13px); padding-top:clamp(9px,2vw,13px); border-top:1px solid rgba(184,151,126,0.4); font-family:'Pretendard',sans-serif; font-size:clamp(12.5px,3vw,15px); font-weight:700; color:#12224a; letter-spacing:-0.02em; text-align:center; }
+.mag-label{ margin-top:1.46cqw; padding-left:2.5cqw; text-align:left; font-family:'Pretendard',sans-serif; font-size:3.75cqw; font-weight:700; color:#12224a; letter-spacing:-0.02em; line-height:1.15; white-space:nowrap; }
+.mag-benefit{ margin-top:0.83cqw; text-align:right; font-family:'Pretendard',sans-serif; font-style:italic; font-size:5cqw; font-weight:800; color:#12224a; letter-spacing:-0.02em; line-height:1.05; white-space:nowrap; text-shadow:0 1px 8px rgba(255,255,255,0.95),0 1px 3px rgba(255,255,255,0.95); }
+.ev-block.tight .mag-benefit{ margin-top:-2.08cqw; }
+.ev-block.lead .mag-benefit{ font-size:6.04cqw; }
+.mag-note{ margin-top:2.71cqw; padding-top:2.71cqw; border-top:1px solid rgba(184,151,126,0.4); font-family:'Pretendard',sans-serif; font-size:3.13cqw; font-weight:700; color:#12224a; letter-spacing:-0.02em; text-align:center; }
 .mag-note b{ color:#8a3d8f; }
 .mag-benefit b{ color:#0A1D37; font-weight:800; font-size:1.16em; }
 .mag-benefit s{ color:#9a938a; font-weight:500; font-size:0.8em; }
