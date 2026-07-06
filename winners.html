@@ -110,7 +110,14 @@ class Component extends DCLogic {
     } },9000);
   }
 
-  _parseKST(t){ if(!t) return null; var m=String(t).match(/(\d{1,2})\uc6d4\s*(\d{1,2})\uc77c\s*(\d{1,2})\uc2dc\s*(\d{1,2})\ubd84/); if(m){ var y=new Date().getFullYear(); return new Date(y, +m[1]-1, +m[2], +m[3], +m[4]); } var d=new Date(t); return isNaN(d)?null:d; }
+  _parseKST(t){
+    if(!t) return null; t=String(t).trim(); var now=new Date();
+    var k=t.match(/(\d{1,2})\s*\uc6d4\s*(\d{1,2})\s*\uc77c(?:\s*(\d{1,2})\s*\uc2dc\s*(\d{1,2})\s*\ubd84)?/);
+    if(k){ var yk=t.match(/(20\d{2})\s*\ub144/); return new Date(yk?+yk[1]:now.getFullYear(), +k[1]-1, +k[2], k[3]?+k[3]:0, k[4]?+k[4]:0); }
+    var g=t.match(/(20\d{2})[.\-\/]\s*(\d{1,2})[.\-\/]\s*(\d{1,2})(?:[ T]+(?:(\uc624\uc804|\uc624\ud6c4)\s*)?(\d{1,2}):(\d{2}))?/);
+    if(g){ var h=g[5]?+g[5]:0; if(g[4]==='\uc624\ud6c4'&&h<12)h+=12; if(g[4]==='\uc624\uc804'&&h===12)h=0; return new Date(+g[1], +g[2]-1, +g[3], h, g[6]?+g[6]:0); }
+    var d=new Date(t); return isNaN(d)?null:d;
+  }
   _isToday(t){ var d=this._parseKST(t); if(!d) return false; var n=new Date(); return d.getFullYear()===n.getFullYear()&&d.getMonth()===n.getMonth()&&d.getDate()===n.getDate(); }
   _fmt(t){ return String(t||''); }
 
