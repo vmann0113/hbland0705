@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&display=swap">
+<style>
+@font-face{font-family:'Jalnan';font-display:swap;src:url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/Jalnan.woff') format('woff');}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{font-family:'Pretendard',sans-serif;background:#0A1D37;color:#F3ECE1;}
+</style>
+<script src="assets/branches.js"></script>
+</helmet>
+<div style="max-width:860px;margin:0 auto;padding:0 0 90px;">
+
+  <div style="background:radial-gradient(120% 90% at 50% 0%, rgba(184,151,126,0.14), rgba(10,29,55,0) 60%);padding:34px 22px 26px;border-bottom:1px solid rgba(184,151,126,0.3);">
+    <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;letter-spacing:0.22em;color:#B8977E;text-transform:uppercase;">Hanbeam · Winners</div>
+    <div style="font-family:'Jalnan','Pretendard',sans-serif;font-size:clamp(24px,4vw,34px);color:#F5EFE4;margin:8px 0 4px;letter-spacing:-0.5px;">당첨자 현황</div>
+    <div style="font-size:13.5px;color:rgba(243,236,225,0.7);line-height:1.6;max-width:600px;">이벤트 룰렛 <b style="color:#E7CE93;">당첨·신청 내역</b>을 지점별로 확인합니다. 당첨자에게 연락해 혜택을 안내하세요.</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:22px 18px 0;">
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(184,151,126,0.28);border-radius:10px;padding:14px 12px;text-align:center;">
+      <div style="font-size:11.5px;color:rgba(243,236,225,0.6);font-weight:600;">전체 신청</div>
+      <div style="font-family:'Jalnan','Pretendard',sans-serif;font-size:clamp(20px,3.4vw,28px);color:#E7CE93;margin-top:4px;">{{ totalCount }}</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(184,151,126,0.28);border-radius:10px;padding:14px 12px;text-align:center;">
+      <div style="font-size:11.5px;color:rgba(243,236,225,0.6);font-weight:600;">오늘</div>
+      <div style="font-family:'Jalnan','Pretendard',sans-serif;font-size:clamp(20px,3.4vw,28px);color:#F5EFE4;margin-top:4px;">{{ todayCount }}</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(184,151,126,0.28);border-radius:10px;padding:14px 12px;text-align:center;">
+      <div style="font-size:11.5px;color:rgba(243,236,225,0.6);font-weight:600;">표시 중</div>
+      <div style="font-family:'Jalnan','Pretendard',sans-serif;font-size:clamp(20px,3.4vw,28px);color:#F5EFE4;margin-top:4px;">{{ shownCount }}</div>
+    </div>
+  </div>
+
+  <div style="padding:20px 18px 4px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+    <span style="font-size:13px;font-weight:700;color:rgba(243,236,225,0.66);">{{ statusText }}</span>
+    <button style="border:1px solid #B8977E;background:#B8977E;color:#0A1D37;font-size:12.5px;font-weight:700;padding:8px 15px;border-radius:8px;cursor:pointer;font-family:'Pretendard',sans-serif;" onClick="{{ onReload }}">새로고침</button>
+  </div>
+
+  <sc-if value="{{ errMsg }}" hint-placeholder-val="{{ false }}">
+    <div style="margin:4px 18px 8px;padding:12px 14px;background:rgba(224,150,150,0.1);border:1px solid rgba(224,150,150,0.35);border-radius:10px;font-size:12.5px;color:#e6a5a5;line-height:1.6;">{{ errMsg }}</div>
+  </sc-if>
+
+  <div style="padding:6px 18px 12px;">
+    <input style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(184,151,126,0.3);border-radius:10px;color:#F5EFE4;font-size:14px;padding:11px 13px;font-family:'Pretendard',sans-serif;" placeholder="이름 · 연락처 · 경품 검색" value="{{ query }}" onInput="{{ onQuery }}">
+  </div>
+
+  <div style="display:flex;gap:7px;overflow-x:auto;padding:0 18px 14px;">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="10">
+      <button style="{{ c.style }}" onClick="{{ c.onPick }}">{{ c.label }}</button>
+    </sc-for>
+  </div>
+
+  <div style="padding:0 18px;">
+    <sc-if value="{{ hasRows }}" hint-placeholder-val="{{ false }}">
+      <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+        <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(184,151,126,0.28);border-radius:14px;padding:14px 16px;margin-bottom:10px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+              <span style="font-family:'Jalnan','Pretendard',sans-serif;font-size:17px;color:#F5EFE4;">{{ r.name }}</span>
+              <span style="font-size:11.5px;font-weight:700;color:#E7CE93;background:rgba(184,151,126,0.16);border:1px solid rgba(184,151,126,0.4);padding:3px 9px;border-radius:6px;white-space:nowrap;">{{ r.branch }}</span>
+            </div>
+            <a style="font-size:13px;font-weight:700;color:#8ad0ff;text-decoration:none;white-space:nowrap;font-family:ui-monospace,monospace;" href="{{ r.telHref }}">{{ r.phone }}</a>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:9px;">
+            <span style="font-size:13.5px;color:#D8C4B2;font-weight:600;">🎁 {{ r.prize }}</span>
+            <span style="flex:1;"></span>
+            <span style="font-size:11.5px;color:rgba(243,236,225,0.5);font-family:ui-monospace,monospace;">{{ r.time }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </sc-if>
+    <sc-if value="{{ showEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;padding:50px 20px;color:rgba(243,236,225,0.45);font-size:14px;">{{ emptyText }}</div>
+    </sc-if>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  GAS_URL = 'https://script.google.com/macros/s/AKfycbxJwTVpsdJ64hihl9yV9yM5NpNVVL1_AN57_5UsGl8VIiP1RyORXmKOooDc609LO2E5/exec';
+  state = { leads:null, loading:false, err:'', filter:'ALL', query:'' };
+
+  componentDidMount(){ this.loadLeads(); }
+
+  loadLeads(){
+    if(this.state.loading) return;
+    this.setState({loading:true, err:''});
+    var self=this, cb='__hbW_'+Date.now(), s=document.createElement('script'), done=false;
+    window[cb]=function(data){ done=true; try{delete window[cb];}catch(e){}
+      var arr=Array.isArray(data)?data:((data&&(data.rows||data.data))||[]);
+      self.setState({leads:arr, loading:false});
+      if(s&&s.parentNode)s.parentNode.removeChild(s);
+    };
+    s.src=this.GAS_URL+(this.GAS_URL.indexOf('?')>=0?'&':'?')+'action=list&callback='+cb;
+    s.onerror=function(){ self.setState({loading:false, err:'불러오기 실패 · 인터넷 연결을 확인하세요.'}); if(s&&s.parentNode)s.parentNode.removeChild(s); };
+    document.body.appendChild(s);
+    setTimeout(function(){ if(!done){ try{delete window[cb];}catch(e){}
+      self.setState(function(st){ return st.leads?{loading:false}:{loading:false, err:'응답이 없습니다. 구글 Apps Script에 조회(doGet · action=list) 엔드포인트가 배포됐는지 확인하세요.'}; });
+    } },9000);
+  }
+
+  _parseKST(t){ if(!t) return null; var m=String(t).match(/(\d{1,2})\uc6d4\s*(\d{1,2})\uc77c\s*(\d{1,2})\uc2dc\s*(\d{1,2})\ubd84/); if(m){ var y=new Date().getFullYear(); return new Date(y, +m[1]-1, +m[2], +m[3], +m[4]); } var d=new Date(t); return isNaN(d)?null:d; }
+  _isToday(t){ var d=this._parseKST(t); if(!d) return false; var n=new Date(); return d.getFullYear()===n.getFullYear()&&d.getMonth()===n.getMonth()&&d.getDate()===n.getDate(); }
+  _fmt(t){ return String(t||''); }
+
+  renderVals(){
+    var BR=(typeof window!=='undefined'&&window.HB_BRANCHES)||{};
+    var codes=Object.keys(BR);
+    var all=this.state.leads||[];
+    // normalize
+    var norm=all.map(function(L){ return {
+      name:String(L.name||'').trim(),
+      phone:String(L.phone||'').trim(),
+      prize:String(L.prize||'').trim(),
+      branch:String(L.branch||'').trim(),
+      time:L.time||L.timestamp||L.date||''
+    }; }).filter(function(r){ return r.name || r.phone; }); // drop empty rows defensively
+
+    var self=this;
+    // branch chips: 전체 + each branch name that appears OR configured
+    var branchNames=[];
+    codes.forEach(function(c){ var cfg=BR[c]; (cfg.dual||[cfg.name]).forEach(function(n){ if(branchNames.indexOf(n)<0) branchNames.push(n); }); });
+    // also include any branch present in data but not configured
+    norm.forEach(function(r){ if(r.branch && branchNames.indexOf(r.branch)<0) branchNames.push(r.branch); });
+
+    var filter=this.state.filter, q=this.state.query.trim().toLowerCase();
+    var filtered=norm.filter(function(r){
+      if(filter!=='ALL' && r.branch!==filter) return false;
+      if(q){ var hay=(r.name+' '+r.phone+' '+r.prize+' '+r.branch).toLowerCase(); if(hay.indexOf(q)<0) return false; }
+      return true;
+    });
+    // newest first
+    var rows=filtered.slice().reverse().map(function(r){
+      var tel=r.phone.replace(/[^0-9]/g,'');
+      return { name:r.name||'—', phone:r.phone||'—', telHref:tel?('tel:'+tel):'#', prize:r.prize||'—', branch:r.branch||'미지정', time:self._fmt(r.time) };
+    });
+
+    var chips=[{code:'ALL',label:'전체 '+norm.length}].concat(branchNames.map(function(n){
+      var cnt=norm.filter(function(r){return r.branch===n;}).length;
+      return {code:n,label:n+' '+cnt};
+    })).map(function(ch){
+      var on=filter===ch.code;
+      return { label:ch.label,
+        style:{ whiteSpace:'nowrap',padding:'8px 14px',borderRadius:'999px',cursor:'pointer',fontWeight:'700',fontSize:'13px',fontFamily:"'Jalnan','Pretendard',sans-serif",
+          border:on?'1px solid #B8977E':'1px solid rgba(184,151,126,0.4)', background:on?'#B8977E':'transparent', color:on?'#0A1D37':'rgba(243,236,225,0.7)' },
+        onPick:function(){ self.setState({filter:ch.code}); } };
+    });
+
+    var todayCount=norm.filter(function(r){return self._isToday(r.time);}).length;
+
+    return {
+      totalCount:this.state.leads?String(norm.length):'—',
+      todayCount:this.state.leads?String(todayCount):'—',
+      shownCount:this.state.leads?String(rows.length):'—',
+      statusText:this.state.loading?'불러오는 중…':(this.state.leads?('총 '+norm.length+'건 · 최근순'):'데이터 대기'),
+      errMsg:this.state.err,
+      onReload:function(){ self.loadLeads(); },
+      query:this.state.query,
+      onQuery:function(e){ self.setState({query:e.target.value}); },
+      chips:chips,
+      rows:rows,
+      hasRows:rows.length>0,
+      showEmpty:!!this.state.leads && rows.length===0,
+      emptyText:(this.state.query||filter!=='ALL')?'조건에 맞는 신청이 없습니다.':'아직 신청 내역이 없습니다.'
+    };
+  }
+}
+</script>
+</body>
+</html>
