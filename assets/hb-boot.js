@@ -39,7 +39,7 @@ window.HB_ROULETTE_ENABLED = (window.HB_ROULETTE_ENABLED !== false);
     var name=document.getElementById('evName').value.trim();
     var phone=document.getElementById('evPhone').value.trim();
     var branch=document.getElementById('evBranch').value;
-    var GAS_URL="https://script.google.com/macros/s/AKfycbxJwTVpsdJ64hihl9yV9yM5NpNVVL1_AN57_5UsGl8VIiP1RyORXmKOooDc609LO2E5/exec";
+    var GAS_URL="https://script.google.com/macros/s/AKfycbzFX0_bpw0It_r6uon9km3qzfYjnoCwoZx_y5GsOwyDcJCUSlcxhHCbXs2FwmoNyhvE/exec";
     if(!name || phone.replace(/-/g,"").length<11) return alert("성함과 연락처 11자리를 정확히 입력해주세요.");
     var btn=document.querySelector('.ev-btn'); btn.innerText="처리 중..."; btn.disabled=true;
     var cb='__hbSubmit_'+Date.now();
