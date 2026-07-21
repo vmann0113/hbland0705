@@ -4,6 +4,28 @@ window.HB_ROULETTE_ENABLED = (window.HB_ROULETTE_ENABLED !== false);
   try{ _params=new URLSearchParams(location.search); HB_BRANCH=_params.get('b')||'bs'; _rp=(_params.get('roulette')||'').toLowerCase(); _hasBParam=_params.has('b'); _forcePick=(_params.get('pick')==='1'); }catch(e){}
   try{ var _m=JSON.parse(localStorage.getItem('hbBranchRoulette')||'null'); if(_m&&typeof _m==='object'&&_m[HB_BRANCH]===false) _adminOff=true; }catch(e){}
   window.HB_BRANCH = HB_BRANCH;
+
+  var NAVER_MAP_KEY='pgxefrkkuy';
+  var _naverLoading=false, _naverReady=false, _naverDone=false, _mapQueue=[], _hbMaps=[];
+  function _osmURL(g){ var lat=g[0], lon=g[1]; return 'https://www.openstreetmap.org/export/embed.html?bbox='+(lon-0.004).toFixed(4)+'%2C'+(lat-0.003).toFixed(4)+'%2C'+(lon+0.004).toFixed(4)+'%2C'+(lat+0.003).toFixed(4)+'&layer=mapnik&marker='+lat.toFixed(4)+'%2C'+lon.toFixed(4); }
+  function _osmInto(el,g){ el.innerHTML='<iframe src="'+_osmURL(g)+'" style="width:100%;height:100%;border:0;display:block;" loading="lazy"></iframe>'; }
+  function _osmFallbackAll(){ _naverReady=false; _hbMaps.forEach(function(m){ if(!m.el.querySelector('iframe')) _osmInto(m.el,m.g); }); }
+  function _flushMaps(){ _naverDone=true; var q=_mapQueue.slice(); _mapQueue=[]; q.forEach(function(f){ try{f();}catch(e){} }); }
+  function _loadNaver(cb){
+    if(_naverDone) return cb();
+    _mapQueue.push(cb);
+    if(_naverLoading) return;
+    _naverLoading=true;
+    window.navermap_authFailure=function(){ _osmFallbackAll(); };
+    var s=document.createElement('script');
+    s.src='https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId='+NAVER_MAP_KEY;
+    s.onload=function(){ _naverReady=(typeof naver!=='undefined'&&!!naver.maps); _flushMaps(); };
+    s.onerror=function(){ _naverReady=false; _flushMaps(); };
+    document.head.appendChild(s);
+    setTimeout(function(){ if(!_naverDone){ _naverReady=(typeof naver!=='undefined'&&!!naver.maps); _flushMaps(); } }, 6000);
+    setTimeout(function(){ _hbMaps.forEach(function(m){ if(!m.el.querySelector('iframe') && !m.el.querySelector('canvas,img')) _osmInto(m.el,m.g); }); }, 3500);
+  }
+
   var ROULETTE_ENABLED = (window.HB_ROULETTE_ENABLED !== false) && !_adminOff && _rp!=='off';
   if(_rp==='on') ROULETTE_ENABLED = true;
   var evResult = "";
@@ -238,8 +260,14 @@ window.HB_ROULETTE_ENABLED = (window.HB_ROULETTE_ENABLED !== false);
     if(r[0]){ LINKS.reserve.bs=r[0]; LINKS.reserve.ct=r[1]||r[0]; }
     try{
       var addr=cfg.addr||[]; var geo=cfg.geo||[];
-      function _osm(g){ if(!g) return null; var lat=g[0], lon=g[1]; return 'https://www.openstreetmap.org/export/embed.html?bbox='+(lon-0.004).toFixed(4)+'%2C'+(lat-0.003).toFixed(4)+'%2C'+(lon+0.004).toFixed(4)+'%2C'+(lat+0.003).toFixed(4)+'&layer=mapnik&marker='+lat.toFixed(4)+'%2C'+lon.toFixed(4); }
-      function _setMap(card,g){ if(!card||!g) return; var f=card.querySelector('.naver-map,iframe'); var u=_osm(g); if(f&&u) f.setAttribute('src',u); }
+      function _renderMap(el,g){
+        if(_hbMaps.indexOf(el.__m)<0){ el.__m={el:el,g:g}; _hbMaps.push(el.__m); }
+        if(_naverReady && typeof naver!=='undefined' && naver.maps){
+          try{ el.innerHTML=''; var pos=new naver.maps.LatLng(g[0],g[1]); var map=new naver.maps.Map(el,{center:pos,zoom:16,scrollWheel:false}); new naver.maps.Marker({position:pos,map:map}); return; }catch(e){}
+        }
+        _osmInto(el,g);
+      }
+      function _setMap(card,g){ if(!card||!g) return; var el=card.querySelector('.naver-map,iframe'); if(!el) return; if(el.tagName==='IFRAME'){ var d=document.createElement('div'); d.className='naver-map'; el.parentNode.replaceChild(d,el); el=d; } el.__mg=g; _loadNaver(function(){ _renderMap(el,g); }); }
       var h2=document.querySelector('.info-sec h2'); if(h2) h2.innerText='한빔한복 '+cfg.name+' 위치안내';
       var cards=document.querySelectorAll('.map-card');
       if(cards[0]){ var h0=cards[0].querySelector('h3'); if(h0) h0.innerText=(cfg.dual?cfg.dual[0]:cfg.name); var a0=cards[0].querySelector('.addr-text'); if(a0&&addr[0]) a0.innerText=addr[0]; _setMap(cards[0],geo[0]); }
