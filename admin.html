@@ -26,6 +26,7 @@ body{font-family:'Pretendard',sans-serif;background:#0A1D37;color:#F3ECE1;}
 .am-stat .k{font-size:11.5px;color:rgba(243,236,225,0.6);font-weight:600;}
 .am-stat .v{font-family:'Paperlogy','Pretendard',sans-serif;font-size:clamp(18px,3vw,26px);color:#F5EFE4;margin-top:4px;}
 .am-stat .v.gold{color:#E7CE93;}
+.am-sel{padding:7px 10px;border-radius:8px;border:1px solid rgba(184,151,126,0.35);background:#0e2444;color:#F3ECE1;font-size:13px;font-weight:700;}
 .am-tabs{display:flex;gap:8px;padding:22px 18px 6px;flex-wrap:wrap;}
 .am-tab{flex:1;min-width:120px;text-align:center;padding:12px 10px;border-radius:10px;border:1px solid rgba(184,151,126,0.35);background:transparent;color:rgba(243,236,225,0.72);font-weight:700;font-size:14px;cursor:pointer;transition:.18s;font-family:'Pretendard',sans-serif;}
 .am-tab.on{background:#B8977E;border-color:#B8977E;color:#0A1D37;}
@@ -176,7 +177,14 @@ image-slot{--is-bg:rgba(255,255,255,0.04);}
     <sc-if value="{{ isTraffic }}" hint-placeholder-val="{{ false }}">
       <div class="am-toolbar">
         <span class="lbl">{{ leadsStatus }}</span>
-        <span class="btns"><button class="am-mini solid" onClick="{{ onLeadsReload }}">새로고침</button></span>
+        <span class="btns">
+          <select class="am-sel" value="{{ leadBranch }}" onChange="{{ onLeadBranch }}">
+            <sc-for list="{{ leadBranchOpts }}" as="o" hint-placeholder-count="10">
+              <option value="{{ o.value }}">{{ o.label }}</option>
+            </sc-for>
+          </select>
+          <button class="am-mini solid" onClick="{{ onLeadsReload }}">새로고침</button>
+        </span>
       </div>
       <sc-if value="{{ leadsErr }}" hint-placeholder-val="{{ false }}">
         <div class="am-hint" style="color:#e6a5a5;">{{ leadsErr }} · 구글 시트 읽기 엔드포인트 배포를 확인하세요.</div>
@@ -219,7 +227,7 @@ class Component extends DCLogic {
   ];
   STORE_KEY = 'hbBranchRoulette';
   BEN_KEY = 'hbBranchBenefits';
-  state = { tab:'traffic', on:{}, copied:'', imgBranch:'bs', benBranch:'bs', ben:{}, benSaved:'', leads:null, leadsLoading:false, leadsErr:'' };
+  state = { tab:'traffic', leadBranch:'', on:{}, copied:'', imgBranch:'bs', benBranch:'bs', ben:{}, benSaved:'', leads:null, leadsLoading:false, leadsErr:'' };
 
   componentDidMount(){
     const def={}; this.BRANCHES.forEach(b=>def[b.code]= b.code!=='dg');
@@ -312,8 +320,18 @@ class Component extends DCLogic {
     const bc=this.state.benBranch; const curB=this.curBen(bc); const _roman=['Ⅰ','Ⅱ','Ⅲ','Ⅳ','Ⅴ'];
     const _leads=this.state.leads; const _mask=this._mask.bind(this);
     const leadRows=this.BRANCHES.map(function(b){ var cfg=(window.HB_BRANCHES&&window.HB_BRANCHES[b.code])||{}; var names=cfg.dual||[cfg.name||b.name]; var cnt=_leads?_leads.filter(function(L){return names.indexOf(L.branch)>=0;}).length:null; return { name:b.name, cnt: cnt==null?'—':String(cnt), dotStyle:{background:'#B8977E'} }; });
-    const recentLeads=_leads?_leads.slice().reverse().slice(0,30).map(function(L){ var tm=L.time||L.timestamp||L.date||''; return { name:_mask(L.name)+' · '+(L.branch||''), sub:(L.prize||'—')+(tm?' · '+tm:'') }; }):[];
-    const leadsStatus=this.state.leadsLoading?'불러오는 중…':(_leads?('총 '+_leads.length+'건 수집'):'데이터 불러오기');
+    /* 지점 코드 → 저장된 표시 이름들 (bs → ["부산점","센텀점"]) */
+    const _bNames=(code)=>{ var c=(window.HB_BRANCHES&&window.HB_BRANCHES[code])||{}; return c.dual||[c.name||code]; };
+    const _sel=this.state.leadBranch;
+    const _view=(_leads&&_sel)? _leads.filter(function(L){ return _bNames(_sel).indexOf(L.branch)>=0; }) : _leads;
+    /* listLeads 가 created_at 내림차순으로 주므로 뒤집지 않는다.
+       시각 필드도 Supabase 의 created_at 을 본다. */
+    const recentLeads=_view?_view.slice(0,30).map(function(L){
+      var tm=L.created_at||L.time||'';
+      if(tm) tm=String(tm).replace('T',' ').slice(0,16);
+      return { name:_mask(L.name)+' · '+(L.branch||''), sub:(L.prize||'—')+(tm?' · '+tm:'') };
+    }):[];
+    const leadsStatus=this.state.leadsLoading?'불러오는 중…':(_leads?(_sel?('필터 '+(_view?_view.length:0)+'건 / 전체 '+_leads.length+'건'):('총 '+_leads.length+'건 수집')):'데이터 불러오기');
     return {
       total:this.BRANCHES.length, onCount, leadsTileText,
       rows,
@@ -347,6 +365,9 @@ class Component extends DCLogic {
       benSaved:this.state.benSaved,
       benOpen:()=>{ try{ const f=encodeURIComponent('한빔한복 통합예약센터.dc.html'); const base=location.href.split('?')[0].replace(/[^\/]*$/, f); window.open(base+'?b='+bc,'_blank'); }catch(e){} },
       leadRows, recentLeads, leadsStatus, leadsErr:this.state.leadsErr,
+      leadBranch:this.state.leadBranch,
+      leadBranchOpts:[{value:'',label:'전체 보기'}].concat(this.BRANCHES.map(b=>({value:b.code,label:b.name}))),
+      onLeadBranch:(e)=>this.setState({leadBranch:e.target.value}),
       onLeadsReload:()=>this.loadLeads(),
     };
   }
