@@ -72,9 +72,49 @@ image-slot{--is-bg:rgba(255,255,255,0.04);}
 .am-savemsg{font-size:12.5px;color:#5fd39a;font-weight:700;}
 .am-hint{font-size:12px;color:rgba(243,236,225,0.55);line-height:1.6;margin:2px 2px 12px;}
 </style>
+<script src="assets/supabase.js"></script>
 <script src="assets/branches.js"></script>
 </helmet>
 <div class="am-wrap">
+<div id="hbLogin" style="position:fixed;inset:0;z-index:99999;background:#0A1D37;display:flex;align-items:center;justify-content:center;padding:24px;font-family:'Pretendard',sans-serif;">
+  <div style="width:100%;max-width:340px;">
+    <div style="color:#C9A986;font-size:12px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:10px;">Hanbeam Admin</div>
+    <div style="color:#F5EFE4;font-size:22px;font-weight:800;margin-bottom:22px;">관리자 로그인</div>
+    <input id="hbEmail" type="email" placeholder="이메일" autocomplete="username"
+      style="width:100%;box-sizing:border-box;padding:13px 14px;margin-bottom:9px;border-radius:8px;border:1px solid rgba(184,151,126,.35);background:#0e2444;color:#F5EFE4;font-size:15px;">
+    <input id="hbPw" type="password" placeholder="비밀번호" autocomplete="current-password"
+      style="width:100%;box-sizing:border-box;padding:13px 14px;border-radius:8px;border:1px solid rgba(184,151,126,.35);background:#0e2444;color:#F5EFE4;font-size:15px;">
+    <div id="hbAuthErr" style="color:#e59a9a;font-size:13px;min-height:19px;margin:9px 0 2px;"></div>
+    <button id="hbLoginBtn" style="width:100%;padding:13px;border:0;border-radius:8px;background:#C9A986;color:#0A1D37;font-weight:800;font-size:15px;cursor:pointer;">로그인</button>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='hbAdminToken';
+  function show(){ document.getElementById('hbLogin').style.display='flex'; }
+  function hide(){ document.getElementById('hbLogin').style.display='none'; }
+  try{ var t=sessionStorage.getItem(KEY); if(t){ window.__hbToken=t; hide(); } }catch(e){}
+  function doLogin(){
+    var em=document.getElementById('hbEmail').value.trim();
+    var pw=document.getElementById('hbPw').value;
+    var er=document.getElementById('hbAuthErr');
+    var btn=document.getElementById('hbLoginBtn');
+    if(!em||!pw){ er.textContent='이메일과 비밀번호를 입력하세요.'; return; }
+    btn.disabled=true; btn.textContent='확인 중...'; er.textContent='';
+    HBDB.signIn(em,pw).then(function(tok){
+      window.__hbToken=tok; try{ sessionStorage.setItem(KEY,tok); }catch(e){}
+      hide(); if(window.__hbOnLogin) window.__hbOnLogin();
+    }).catch(function(e){
+      er.textContent='로그인에 실패했습니다. 이메일과 비밀번호를 확인하세요.';
+      btn.disabled=false; btn.textContent='로그인';
+    });
+  }
+  document.getElementById('hbLoginBtn').addEventListener('click',doLogin);
+  document.getElementById('hbPw').addEventListener('keydown',function(e){ if(e.key==='Enter') doLogin(); });
+  window.__hbLogout=function(){ try{ sessionStorage.removeItem(KEY); }catch(e){} window.__hbToken=null; show(); };
+})();
+</script>
+
   <div class="am-hero">
     <div class="am-eyebrow">Hanbeam Admin</div>
     <div class="am-title">한빔한복 통합 관리 시스템</div>
@@ -217,7 +257,6 @@ class Component extends DCLogic {
   ];
   STORE_KEY = 'hbBranchRoulette';
   BEN_KEY = 'hbBranchBenefits';
-  GAS_URL = 'https://script.google.com/macros/s/AKfycbzFX0_bpw0It_r6uon9km3qzfYjnoCwoZx_y5GsOwyDcJCUSlcxhHCbXs2FwmoNyhvE/exec';
   state = { tab:'roulette', on:{}, copied:'', imgBranch:'bs', benBranch:'bs', ben:{}, benSaved:'', leads:null, leadsLoading:false, leadsErr:'' };
 
   componentDidMount(){
@@ -225,22 +264,40 @@ class Component extends DCLogic {
     let saved=null; try{ saved=JSON.parse(localStorage.getItem(this.STORE_KEY)||'null'); }catch(e){}
     let ben={}; try{ ben=JSON.parse(localStorage.getItem(this.BEN_KEY)||'{}')||{}; }catch(e){}
     this.setState({ on: saved&&typeof saved==='object'? Object.assign(def,saved): def, ben });
+    this.loadSettings();
+    window.__hbOnLogin=()=>{ this.loadSettings(); };
   }
   loadLeads(){
     if(this.state.leadsLoading) return;
-    
+    var self=this;
+    if(!window.__hbToken){ this.setState({leadsErr:'로그인이 필요합니다.'}); return; }
     this.setState({leadsLoading:true, leadsErr:''});
-    var self=this, cb='__hbLeads_'+Date.now(), s=document.createElement('script'), done=false;
-    window[cb]=function(data){ done=true; try{delete window[cb];}catch(e){} var arr=Array.isArray(data)?data:((data&&(data.rows||data.data))||[]); self.setState({leads:arr, leadsLoading:false}); if(s&&s.parentNode)s.parentNode.removeChild(s); };
-    s.src=this.GAS_URL+(this.GAS_URL.indexOf('?')>=0?'&':'?')+'action=list&callback='+cb;
-    s.onerror=function(){ self.setState({leadsLoading:false, leadsErr:'불러오기 실패'}); if(s&&s.parentNode)s.parentNode.removeChild(s); };
-    document.body.appendChild(s);
-    setTimeout(function(){ if(!done){ try{delete window[cb];}catch(e){} self.setState(function(st){ return st.leads?{leadsLoading:false}:{leadsLoading:false, leadsErr:'응답 없음'}; }); } },9000);
+    HBDB.listLeads(window.__hbToken)
+      .then(function(rows){ self.setState({leads:rows||[], leadsLoading:false}); })
+      .catch(function(e){
+        var m=String(e&&e.message||'');
+        if(m.indexOf('401')>=0||m.indexOf('403')>=0){ self.setState({leadsLoading:false, leadsErr:'세션이 만료되었습니다. 다시 로그인하세요.'}); if(window.__hbLogout) window.__hbLogout(); return; }
+        self.setState({leadsLoading:false, leadsErr:'불러오기 실패'});
+      });
   }
   _mask(n){ n=String(n||'').trim(); if(n.length<=1)return n||'—'; if(n.length===2)return n.charAt(0)+'*'; return n.charAt(0)+Array(n.length-1).join('*')+n.charAt(n.length-1); }
-  persist(on){ try{ localStorage.setItem(this.STORE_KEY, JSON.stringify(on)); }catch(e){} }
-  toggle(code){ this.setState(s=>{ const on=Object.assign({},s.on,{[code]:!s.on[code]}); this.persist(on); return {on}; }); }
-  setAll(v){ const on={}; this.BRANCHES.forEach(b=>on[b.code]=v); this.persist(on); this.setState({on}); }
+  persist(on, changed){ try{ localStorage.setItem(this.STORE_KEY, JSON.stringify(on)); }catch(e){}
+    if(!changed) return;
+    var self=this;
+    if(!window.__hbToken){ alert("로그인이 필요합니다."); return; }
+    HBDB.setRoulette(changed, on[changed], window.__hbToken)
+      .catch(function(e){ alert("저장 실패: "+(e&&e.message||"")+" 화면 값이 서버와 다를 수 있습니다."); self.loadSettings(); });
+  }
+  loadSettings(){ var self=this;
+    HBDB.getSettings().then(function(m){ if(m) self.setState({on:m}); });
+  }
+  toggle(code){ this.setState(s=>{ const on=Object.assign({},s.on,{[code]:!s.on[code]}); this.persist(on, code); return {on}; }); }
+  setAll(v){ const on={}; this.BRANCHES.forEach(b=>on[b.code]=v); this.setState({on});
+    if(!window.__hbToken){ alert("로그인이 필요합니다."); return; }
+    var self=this;
+    Promise.all(this.BRANCHES.map(b=>HBDB.setRoulette(b.code, v, window.__hbToken)))
+      .catch(function(){ alert("일부 지점 저장에 실패했습니다."); self.loadSettings(); });
+  }
   copy(url,code){ const done=()=>{ this.setState({copied:code}); clearTimeout(this._t); this._t=setTimeout(()=>this.setState({copied:''}),1400); };
     try{ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(done).catch(()=>this.fb(url,done)); } else this.fb(url,done); }catch(e){ this.fb(url,done); } }
   fb(t,done){ try{ const a=document.createElement('textarea'); a.value=t; a.style.position='fixed'; a.style.opacity='0'; document.body.appendChild(a); a.select(); document.execCommand('copy'); document.body.removeChild(a);}catch(e){} done(); }
