@@ -76,44 +76,6 @@ image-slot{--is-bg:rgba(255,255,255,0.04);}
 <script src="assets/branches.js"></script>
 </helmet>
 <div class="am-wrap">
-<div id="hbLogin" style="position:fixed;inset:0;z-index:99999;background:#0A1D37;display:flex;align-items:center;justify-content:center;padding:24px;font-family:'Pretendard',sans-serif;">
-  <div style="width:100%;max-width:340px;">
-    <div style="color:#C9A986;font-size:12px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:10px;">Hanbeam Admin</div>
-    <div style="color:#F5EFE4;font-size:22px;font-weight:800;margin-bottom:22px;">관리자 로그인</div>
-    <input id="hbEmail" type="email" placeholder="이메일" autocomplete="username"
-      style="width:100%;box-sizing:border-box;padding:13px 14px;margin-bottom:9px;border-radius:8px;border:1px solid rgba(184,151,126,.35);background:#0e2444;color:#F5EFE4;font-size:15px;">
-    <input id="hbPw" type="password" placeholder="비밀번호" autocomplete="current-password"
-      style="width:100%;box-sizing:border-box;padding:13px 14px;border-radius:8px;border:1px solid rgba(184,151,126,.35);background:#0e2444;color:#F5EFE4;font-size:15px;">
-    <div id="hbAuthErr" style="color:#e59a9a;font-size:13px;min-height:19px;margin:9px 0 2px;"></div>
-    <button id="hbLoginBtn" style="width:100%;padding:13px;border:0;border-radius:8px;background:#C9A986;color:#0A1D37;font-weight:800;font-size:15px;cursor:pointer;">로그인</button>
-  </div>
-</div>
-<script>
-(function(){
-  var KEY='hbAdminToken';
-  function show(){ document.getElementById('hbLogin').style.display='flex'; }
-  function hide(){ document.getElementById('hbLogin').style.display='none'; }
-  try{ var t=sessionStorage.getItem(KEY); if(t){ window.__hbToken=t; hide(); } }catch(e){}
-  function doLogin(){
-    var em=document.getElementById('hbEmail').value.trim();
-    var pw=document.getElementById('hbPw').value;
-    var er=document.getElementById('hbAuthErr');
-    var btn=document.getElementById('hbLoginBtn');
-    if(!em||!pw){ er.textContent='이메일과 비밀번호를 입력하세요.'; return; }
-    btn.disabled=true; btn.textContent='확인 중...'; er.textContent='';
-    HBDB.signIn(em,pw).then(function(tok){
-      window.__hbToken=tok; try{ sessionStorage.setItem(KEY,tok); }catch(e){}
-      hide(); if(window.__hbOnLogin) window.__hbOnLogin();
-    }).catch(function(e){
-      er.textContent='로그인에 실패했습니다. 이메일과 비밀번호를 확인하세요.';
-      btn.disabled=false; btn.textContent='로그인';
-    });
-  }
-  document.getElementById('hbLoginBtn').addEventListener('click',doLogin);
-  document.getElementById('hbPw').addEventListener('keydown',function(e){ if(e.key==='Enter') doLogin(); });
-  window.__hbLogout=function(){ try{ sessionStorage.removeItem(KEY); }catch(e){} window.__hbToken=null; show(); };
-})();
-</script>
 
   <div class="am-hero">
     <div class="am-eyebrow">Hanbeam Admin</div>
@@ -379,6 +341,56 @@ class Component extends DCLogic {
     };
   }
 }
+</script>
+<script>
+/* 관리자 로그인 게이트.
+   DC 런타임이 템플릿을 다시 그리면서 DOM 을 갈아끼우므로,
+   오버레이는 템플릿 밖(document.body)에 직접 만들어 붙인다. */
+(function(){
+  var KEY='hbAdminToken', el;
+  function build(){
+    el=document.createElement('div');
+    el.id='hbLogin';
+    el.style.cssText='position:fixed;inset:0;z-index:2147483647;background:#0A1D37;display:flex;align-items:center;justify-content:center;padding:24px;font-family:Pretendard,sans-serif;';
+    el.innerHTML=
+      '<div style="width:100%;max-width:340px;">'
+      +'<div style="color:#C9A986;font-size:12px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:10px;">Hanbeam Admin</div>'
+      +'<div style="color:#F5EFE4;font-size:22px;font-weight:800;margin-bottom:22px;">관리자 로그인</div>'
+      +'<input id="hbEmail" type="email" placeholder="이메일" autocomplete="username" style="width:100%;box-sizing:border-box;padding:13px 14px;margin-bottom:9px;border-radius:8px;border:1px solid rgba(184,151,126,.35);background:#0e2444;color:#F5EFE4;font-size:15px;">'
+      +'<input id="hbPw" type="password" placeholder="비밀번호" autocomplete="current-password" style="width:100%;box-sizing:border-box;padding:13px 14px;border-radius:8px;border:1px solid rgba(184,151,126,.35);background:#0e2444;color:#F5EFE4;font-size:15px;">'
+      +'<div id="hbAuthErr" style="color:#e59a9a;font-size:13px;min-height:19px;margin:9px 0 2px;"></div>'
+      +'<button id="hbLoginBtn" style="width:100%;padding:13px;border:0;border-radius:8px;background:#C9A986;color:#0A1D37;font-weight:800;font-size:15px;cursor:pointer;">로그인</button>'
+      +'</div>';
+    document.body.appendChild(el);
+    el.querySelector('#hbLoginBtn').addEventListener('click', doLogin);
+    el.querySelector('#hbPw').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+  }
+  function show(){ if(el) el.style.display='flex'; }
+  function hide(){ if(el) el.style.display='none'; }
+  function doLogin(){
+    var em=el.querySelector('#hbEmail').value.trim();
+    var pw=el.querySelector('#hbPw').value;
+    var er=el.querySelector('#hbAuthErr');
+    var btn=el.querySelector('#hbLoginBtn');
+    if(!em||!pw){ er.textContent='이메일과 비밀번호를 입력하세요.'; return; }
+    if(!(window.HBDB&&HBDB.signIn)){ er.textContent='초기화 중입니다. 잠시 후 다시 눌러주세요.'; return; }
+    btn.disabled=true; btn.textContent='확인 중...'; er.textContent='';
+    HBDB.signIn(em,pw).then(function(tok){
+      window.__hbToken=tok; try{ sessionStorage.setItem(KEY,tok); }catch(e){}
+      hide(); if(window.__hbOnLogin) window.__hbOnLogin();
+    }).catch(function(){
+      er.textContent='로그인에 실패했습니다. 이메일과 비밀번호를 확인하세요.';
+      btn.disabled=false; btn.textContent='로그인';
+    });
+  }
+  function init(){
+    build();
+    try{ var t=sessionStorage.getItem(KEY); if(t){ window.__hbToken=t; hide(); } }catch(e){}
+    window.__hbLogout=function(){ try{ sessionStorage.removeItem(KEY); }catch(e){} window.__hbToken=null; show(); };
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
 </script>
 </body>
 </html>
