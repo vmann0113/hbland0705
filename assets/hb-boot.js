@@ -2,7 +2,12 @@ window.HB_ROULETTE_ENABLED = (window.HB_ROULETTE_ENABLED !== false);
 (function(){
   var _params, HB_BRANCH='bs', _rp='', _adminOff=false, _defaultBenefitsHTML=null, _hasBParam=false, _forcePick=false;
   try{ _params=new URLSearchParams(location.search); HB_BRANCH=_params.get('b')||'bs'; _rp=(_params.get('roulette')||'').toLowerCase(); _hasBParam=_params.has('b'); _forcePick=(_params.get('pick')==='1'); }catch(e){}
-  try{ var _m=JSON.parse(localStorage.getItem('hbBranchRoulette')||'null'); if(_m&&typeof _m==='object'&&_m[HB_BRANCH]===false) _adminOff=true; }catch(e){}
+  /* 룰렛 ON/OFF 는 서버(branch_settings)에서 읽는다. 응답 전/실패 시엔
+     기존 동작대로 노출한다 — 광고 유입자가 빈손으로 나가지 않도록. */
+  window.__hbSettings = null;
+  window.__hbSettingsP = (window.HBDB && HBDB.getSettings)
+    ? HBDB.getSettings().then(function(m){ window.__hbSettings = m; return m; })
+    : Promise.resolve(null);
   window.HB_BRANCH = HB_BRANCH;
 
   var NAVER_MAP_KEY='pgxefrkkuy';
@@ -57,24 +62,29 @@ window.HB_ROULETTE_ENABLED = (window.HB_ROULETTE_ENABLED !== false);
     document.getElementById('selectModal').style.display='flex';
   }
   function closeModal(){ document.getElementById('selectModal').style.display='none'; }
+  /* 신청 등록 — Supabase. 실제 HTTP 상태코드로 판정한다.
+       201 성공 / 409 중복 / 그 외는 실패로 알리고 재시도를 열어준다. */
   function submitEvData(){
     var name=document.getElementById('evName').value.trim();
     var phone=document.getElementById('evPhone').value.trim();
     var branch=document.getElementById('evBranch').value;
-    var GAS_URL="https://script.google.com/macros/s/AKfycbzFX0_bpw0It_r6uon9km3qzfYjnoCwoZx_y5GsOwyDcJCUSlcxhHCbXs2FwmoNyhvE/exec";
     if(!name || phone.replace(/-/g,"").length<11) return alert("성함과 연락처 11자리를 정확히 입력해주세요.");
-    var btn=document.querySelector('.ev-btn'); btn.innerText="처리 중..."; btn.disabled=true;
-    var cb='__hbSubmit_'+Date.now();
-    var finalURL=GAS_URL+"?name="+encodeURIComponent(name)+"&phone="+encodeURIComponent(phone)+"&prize="+encodeURIComponent(evResult)+"&branch="+encodeURIComponent(branch)+"&callback="+cb;
-    var s=document.createElement('script'), done=false;
-    function finish(msg,label){ if(done)return; done=true; try{delete window[cb];}catch(e){} if(s&&s.parentNode)s.parentNode.removeChild(s); alert(msg); btn.innerText=label; }
-    function fail(){ if(done)return; done=true; try{delete window[cb];}catch(e){} if(s&&s.parentNode)s.parentNode.removeChild(s); btn.disabled=false; btn.innerText='다시 신청하기'; alert('신청이 접수되지 않았습니다. 통신 상태를 확인하고 다시 눌러주세요. 계속 안 되면 전화로 접수해 드립니다.'); }
-    window[cb]=function(data){ if(data&&data.result==="duplicate"){ finish("이미 참여하신 내역이 있습니다.","참여 완료"); } else { finish("프리미엄 혜택이 성공적으로 신청되었습니다! 담당자가 곧 연락드리겠습니다.","혜택 신청 완료"); } };
-    s.onload=function(){ setTimeout(function(){ fail(); },1200); };
-    s.onerror=function(){ fail(); };
-    s.src=finalURL;
-    document.body.appendChild(s);
-    setTimeout(function(){ fail(); },10000);
+    var btn=document.querySelector('.ev-btn');
+    btn.innerText="처리 중..."; btn.disabled=true;
+
+    function fail(){
+      btn.disabled=false; btn.innerText='다시 신청하기';
+      alert('신청이 접수되지 않았습니다. 통신 상태를 확인하고 다시 눌러주세요. 계속 안 되면 전화로 접수해 드립니다.');
+    }
+    if(!(window.HBDB && HBDB.insertLead)) return fail();
+
+    HBDB.insertLead({ name:name, phone:phone, prize:evResult, branch:branch })
+      .then(function(res){
+        if(res.duplicate){ alert("이미 참여하신 내역이 있습니다."); btn.innerText="참여 완료"; return; }
+        if(res.ok){ alert("프리미엄 혜택이 성공적으로 신청되었습니다! 담당자가 곧 연락드리겠습니다."); btn.innerText="혜택 신청 완료"; return; }
+        fail();
+      })
+      .catch(fail);
   }
 
   var WHEEL = ["10만원 상품권","5만원 상품권","진주귀걸이 증정","10만원 상품권","5만원 상품권","진주귀걸이 증정"];
@@ -234,7 +244,15 @@ window.HB_ROULETTE_ENABLED = (window.HB_ROULETTE_ENABLED !== false);
     if(_q.indexOf('resetroulette')!==-1){try{localStorage.removeItem(STORE_KEY);}catch(e){}}
     else if(ONCE_PER_DEVICE){try{if(localStorage.getItem(STORE_KEY))return;}catch(e){}}
     drawWheel(WHEEL); drawBulbs(24); drawMarquee(MARQUEE); setupConfetti();
-    setTimeout(openRoulette, OPEN_DELAY);
+    setTimeout(function(){
+      var opened=false;
+      function go(){ if(opened) return; opened=true;
+        var m=window.__hbSettings;
+        if(m && m[HB_BRANCH]===false) return;   /* 관리자가 끈 지점 */
+        openRoulette(); }
+      var t=setTimeout(go, 1500);               /* 응답이 늦으면 기본 노출 */
+      (window.__hbSettingsP||Promise.resolve()).then(function(){ clearTimeout(t); go(); });
+    }, OPEN_DELAY);
   }
   function _escH(s){ return String(s==null?'':s).replace(/[<>&]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;'}[c];}); }
   function _bigWrap(s){ return _escH(s).replace(/(\d+)/, '<span class="mag-big">$1</span>'); }
