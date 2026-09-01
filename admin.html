@@ -83,9 +83,7 @@ image-slot{--is-bg:rgba(255,255,255,0.04);}
 
   <div class="am-stats">
     <div class="am-stat"><div class="k">룰렛 ON</div><div class="v">{{ onCount }}<span style="font-size:13px;color:#7d8ba3;"> / {{ total }}</span></div></div>
-    <div class="am-stat"><div class="k">오늘 유입</div><div class="v">{{ totalVisits }}</div></div>
-    <div class="am-stat"><div class="k">룰렛 참여</div><div class="v">{{ totalPlays }}</div></div>
-    <div class="am-stat"><div class="k">예약 리드</div><div class="v gold">{{ totalLeads }}</div></div>
+    <div class="am-stat"><div class="k">수집 리드</div><div class="v gold">{{ leadsTileText }}</div></div>
   </div>
 
   <div class="am-tabs">
@@ -201,15 +199,15 @@ image-slot{--is-bg:rgba(255,255,255,0.04);}
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:412,&quot;height&quot;:900}}">
 class Component extends DCLogic {
   BRANCHES = [
-    { code:'bs', name:'부산/센텀', visits:360, plays:258, leads:58 },
-    { code:'cm', name:'창원/마산', visits:184, plays:135, leads:28 },
-    { code:'us', name:'울산점', visits:110, plays:79, leads:17 },
-    { code:'gh', name:'김해점', visits:95, plays:70, leads:14 },
-    { code:'ys', name:'양산점', visits:72, plays:0, leads:9 },
-    { code:'jj', name:'진주점', visits:58, plays:41, leads:7 },
-    { code:'ic', name:'인천점', visits:63, plays:44, leads:8 },
-    { code:'as', name:'안산점', visits:84, plays:61, leads:12 },
-    { code:'dg', name:'대구점', visits:76, plays:0, leads:6 },
+    { code:'bs', name:'부산/센텀' },
+    { code:'cm', name:'창원/마산' },
+    { code:'us', name:'울산점' },
+    { code:'gh', name:'김해점' },
+    { code:'ys', name:'양산점' },
+    { code:'jj', name:'진주점' },
+    { code:'ic', name:'인천점' },
+    { code:'as', name:'안산점' },
+    { code:'dg', name:'대구점' },
   ];
   IMG_SECTIONS = [
     { key:'hero', label:'① 히어로 (이벤트 배너)', ph:'히어로 이미지' },
@@ -263,12 +261,13 @@ class Component extends DCLogic {
 
   renderVals(){
     const on=this.state.on||{}; const accent='#B8977E';
-    let onCount=0, totalVisits=0, totalPlays=0, totalLeads=0;
+    let onCount=0;
+    const _ld=this.state.leads; const leadsTileText=_ld?String(_ld.length):'—';
     const rows=this.BRANCHES.map(b=>{
-      const isOn=!!on[b.code]; if(isOn)onCount++; totalVisits+=b.visits; totalLeads+=b.leads; if(isOn)totalPlays+=b.plays;
-      const conv=b.visits? Math.round((b.leads/b.visits)*100)+'%':'—';
-      return { code:b.code, name:b.name, visits:b.visits, leads:b.leads, conv,
-        playsText:isOn?String(b.plays):'—',
+      const isOn=!!on[b.code]; if(isOn)onCount++;
+
+      return { code:b.code, name:b.name,
+
         url:'hanbeam.kr/'+b.code,
         onOpen:(function(code){return function(){ try{ var f=encodeURIComponent('한빔한복 통합예약센터.dc.html'); var base=location.href.split('?')[0].replace(/[^\/]*$/, f); var qs=location.search; window.open(base+qs+(qs?'&':'?')+'b='+code, '_blank'); }catch(e){ location.search='?b='+code; } };})(b.code),
         onToggle:()=>this.toggle(b.code), onCopy:()=>this.copy('https://hanbeam.kr/'+b.code,b.code),
@@ -287,7 +286,7 @@ class Component extends DCLogic {
     const recentLeads=_leads?_leads.slice().reverse().slice(0,30).map(function(L){ var tm=L.time||L.timestamp||L.date||''; return { name:_mask(L.name)+' · '+(L.branch||''), sub:(L.prize||'—')+(tm?' · '+tm:'') }; }):[];
     const leadsStatus=this.state.leadsLoading?'불러오는 중…':(_leads?('총 '+_leads.length+'건 수집'):'데이터 불러오기');
     return {
-      total:this.BRANCHES.length, onCount, totalVisits, totalPlays, totalLeads,
+      total:this.BRANCHES.length, onCount, leadsTileText,
       rows,
       isRoulette:this.state.tab==='roulette', isImages:this.state.tab==='images', isTraffic:this.state.tab==='traffic',
       tabRouletteCls:'am-tab'+(this.state.tab==='roulette'?' on':''),
