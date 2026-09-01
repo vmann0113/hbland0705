@@ -49,7 +49,7 @@ body{ margin:0; font-family:'Pretendard',sans-serif; background-color:#dcdce2; m
   linear-gradient(#B8977E,#B8977E) left 9px bottom 9px/1px 16px no-repeat,
   linear-gradient(#B8977E,#B8977E) right 9px bottom 9px/16px 1px no-repeat,
   linear-gradient(#B8977E,#B8977E) right 9px bottom 9px/1px 16px no-repeat; }
-.hb-hero-model{ position:absolute; left:var(--model-left); top:var(--model-top); width:var(--model-w); height:auto; display:block; pointer-events:none; z-index:1; -webkit-mask-image:linear-gradient(to bottom,#000 74%,transparent 97%); mask-image:linear-gradient(to bottom,#000 74%,transparent 97%); }
+.hb-hero-model{ position:absolute; left:var(--model-left); top:var(--model-top); width:var(--model-w); height:auto; display:block; pointer-events:none; z-index:1; -webkit-mask-image:linear-gradient(to bottom,#000 92%,transparent 100%); mask-image:linear-gradient(to bottom,#000 92%,transparent 100%); }
 .hb-hero-in{ position:relative; z-index:2; height:100%; padding:5.83cqw 7.08cqw 6.67cqw; display:flex; flex-direction:column; }
 .hb-logo-img{ height:auto; width:clamp(108px,25vw,158px); display:block; }
 .hb-logo{ font-family:'Paperlogy','Pretendard',sans-serif; font-size:clamp(18px,4.2vw,27px); color:#0A1D37; letter-spacing:-0.5px; line-height:1.1; }
@@ -109,8 +109,8 @@ body{ margin:0; font-family:'Pretendard',sans-serif; background-color:#dcdce2; m
 .mag-foot{ margin-top:clamp(15px,3vw,22px); font-family:'Pretendard',sans-serif; font-size:clamp(11px,2.5vw,14px); font-weight:700; color:#12224a; letter-spacing:-0.01em; text-shadow:0 1px 8px rgba(247,245,240,0.92); }
 .mag-foot b{ color:var(--hb-gold-dp); }
 /* 이벤트 개수에 따른 자동 조정 (hb-boot.js가 .hb-hero 에 data-ev 를 넣어줌) */
-.hb-hero[data-ev="2"]{ min-height:min(114vw,547px); }
-.hb-hero[data-ev="3"]{ min-height:min(132vw,634px); }
+.hb-hero[data-ev="2"]{ min-height:min(146vw,701px); }
+.hb-hero[data-ev="3"]{ min-height:min(162vw,778px); }
 /* 모델 위 텍스트 가독성 확보용 스크림 (왼쪽 불투명 → 오른쪽 투명) */
 .hb-hero-in::before{ content:''; position:absolute; inset:0; z-index:-1; pointer-events:none; background:linear-gradient(104deg, rgba(250,248,244,0.82) 0%, rgba(250,248,244,0.62) 38%, rgba(250,248,244,0.22) 62%, rgba(250,248,244,0) 80%); }
   background:linear-gradient(102deg, rgba(248,246,241,0.94) 0%, rgba(248,246,241,0.88) 40%, rgba(248,246,241,0.42) 64%, rgba(248,246,241,0) 82%); }
@@ -162,6 +162,23 @@ body{ margin:0; font-family:'Pretendard',sans-serif; background-color:#dcdce2; m
 .mag-lines .ev-block.tight .mag-benefit,
 .mag-lines .ev-block.lead .mag-benefit{ margin-top:0.2cqw !important; }
 .mag-label{ line-height:1.25 !important; }
+/* ── 혜택 박스: 사진 위에 얹히는 카드. 얼굴·어깨 아래에서 시작하고 가로 폭을 꽉 채움 ── */
+.hb-hero-in{ justify-content:flex-start; }
+.mag-lines{ margin-top:auto !important; width:100%;
+  background:linear-gradient(180deg, rgba(255,253,250,0.95), rgba(252,248,242,0.91));
+  -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px);
+  border:1px solid rgba(184,151,126,0.42);
+  padding:4.4cqw 4.8cqw !important;
+  box-shadow:0 20px 46px -24px rgba(80,58,42,0.45); }
+/* 카드 안에서는 스크림이 불필요 — 첫 항목 위 여백만 정리 */
+.mag-lines .ev-block:first-child .ev-head{ margin-top:0; }
+/* .mag-lines 는 .mag-cover 안에 있으므로, margin-top:auto 가 먹으려면
+   .mag-cover 도 남은 높이를 차지하는 플렉스 컬럼이어야 한다. */
+.hb-hero-in > .mag-cover{ flex:1 1 auto; display:flex; flex-direction:column; min-height:0; }
+/* 부모가 min-height 만 가지면 자식의 height:100% 가 auto 로 풀린다.
+   히어로를 플렉스 컬럼으로 만들어 내부가 실제 높이를 차지하게 한다. */
+.hb-hero{ display:flex; flex-direction:column; }
+.hb-hero > .hb-hero-in{ flex:1 1 auto; height:auto; min-height:0; }
 .info-sec{ padding:clamp(32px,5.5vw,60px) 20px; text-align:center; background:#ECECF1; border-top:1px solid rgba(184,151,126,0.45); }
 .info-sec h2{ font-family:'Paperlogy','Pretendard',sans-serif; font-size:clamp(20px,4.6vw,30px); color:var(--hb-navy); margin-bottom:clamp(30px,5vw,50px); font-weight:400; letter-spacing:-1px; }
 .dual-map-container{ display:grid; grid-template-columns:1fr 1fr; gap:30px; width:100%; max-width:1200px; margin:0 auto; }
