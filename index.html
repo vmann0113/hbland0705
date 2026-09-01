@@ -411,6 +411,17 @@ body{ margin:0; font-family:'Pretendard',sans-serif; background-color:#dcdce2; m
 /* 취소선 정가와 화살표는 중립 회색으로 눌러 값만 튀게 */
 .mag-lines .mag-benefit s{ color:#A79C92 !important; }
 .mag-lines .mag-note b{ color:#22357E !important; }
+/* ── 혜택 박스를 서브 문구 폭(≈59cqw)에 맞추고 문구 바로 아래에 붙임 ── */
+.mag-lines{ width:59cqw !important; margin:1.4cqw 0 auto 0 !important; gap:1.4cqw !important; }
+.mag-lines .ev-block{ padding:1.4cqw 2.6cqw 1.6cqw 4.4cqw !important; }
+/* 좁아진 폭에 맞춰 글자 축소 */
+.mag-lines .ev-tag{ font-size:1.9cqw !important; }
+.mag-lines .mag-label{ font-size:2.9cqw !important; }
+.mag-lines .mag-benefit{ font-size:3.5cqw !important; }
+.mag-lines .ev-block.lead .mag-benefit{ font-size:3.9cqw !important; }
+.mag-lines .mag-big{ font-size:1.3em !important; }
+.mag-lines .mag-note{ font-size:2.2cqw !important; }
+.mag-lines .ev-block::before{ width:3px; }
 .info-sec{ padding:clamp(32px,5.5vw,60px) 20px; text-align:center; background:#ECECF1; border-top:1px solid rgba(184,151,126,0.45); }
 .info-sec h2{ font-family:'Paperlogy','Pretendard',sans-serif; font-size:clamp(20px,4.6vw,30px); color:var(--hb-navy); margin-bottom:clamp(30px,5vw,50px); font-weight:400; letter-spacing:-1px; }
 .dual-map-container{ display:grid; grid-template-columns:1fr 1fr; gap:30px; width:100%; max-width:1200px; margin:0 auto; }
