@@ -377,6 +377,33 @@ body{ margin:0; font-family:'Pretendard',sans-serif; background-color:#dcdce2; m
 /* 압축된 만큼 히어로도 낮춤 */
 .hb-hero[data-ev="3"]{ min-height:min(152vw,730px) !important; }
 .hb-hero[data-ev="2"]{ min-height:min(136vw,653px) !important; }
+/* ── 리본↔혜택 간격은 벌리고, 박스 총높이는 낮춘다 ── */
+.mag-lines .ev-head{ margin-bottom:2.0cqw !important; }
+.mag-lines .mag-label{ margin-top:0 !important; line-height:1.15 !important; }
+/* 세로 패딩 축소 */
+.mag-lines .ev-block{ padding:2.0cqw 4cqw 2.2cqw 6.4cqw !important; }
+/* 행간 축소. 단 .mag-big(1.34em)보다 커야 줄마다 간격이 일정하다 */
+.mag-lines .mag-big{ font-size:1.34em !important; }
+.mag-lines .mag-benefit{ line-height:1.38 !important; min-height:1.38em !important;
+  margin-top:0.6cqw !important; }
+/* ── 타이틀 : 두 줄을 같은 크기로 두어 밋밋하던 것을 크기 대비로 전환 ── */
+.mag-title .lead{ display:block; font-size:0.56em; font-weight:400; color:#6A7386;
+  letter-spacing:0.01em; margin-bottom:0.06em; }
+.mag-title{ font-weight:700 !important; }
+.mag-title .g{ color:var(--hb-gold-dp) !important; }
+/* 박스 높이 추가 절감 : 패딩·행간을 더 조인다 (리본 간격은 유지) */
+.mag-lines .ev-block{ padding:1.5cqw 4cqw 1.7cqw 6.4cqw !important; }
+.mag-lines .mag-big{ font-size:1.26em !important; }
+.mag-lines .mag-benefit{ line-height:1.28 !important; min-height:0 !important;
+  margin-top:0.2cqw !important; }
+.mag-lines .ev-head{ margin-bottom:1.7cqw !important; }
+.mag-lines{ gap:1.5cqw !important; }
+/* 항목명(웨딩촬영용 한복 대여 등) : 우측 정렬 + 확대 + 대비 강화 */
+.mag-lines .mag-label{ text-align:right !important; font-size:3.9cqw !important;
+  font-weight:800 !important; color:#2E2018 !important; letter-spacing:-0.035em !important;
+  line-height:1.2 !important; }
+/* 새 타이틀 길이에 맞춰 폭 확보 */
+.mag-title{ max-width:74% !important; }
 .info-sec{ padding:clamp(32px,5.5vw,60px) 20px; text-align:center; background:#ECECF1; border-top:1px solid rgba(184,151,126,0.45); }
 .info-sec h2{ font-family:'Paperlogy','Pretendard',sans-serif; font-size:clamp(20px,4.6vw,30px); color:var(--hb-navy); margin-bottom:clamp(30px,5vw,50px); font-weight:400; letter-spacing:-1px; }
 .dual-map-container{ display:grid; grid-template-columns:1fr 1fr; gap:30px; width:100%; max-width:1200px; margin:0 auto; }
@@ -767,7 +794,7 @@ footer,footer span,footer div{ color:#c9bfae !important; text-decoration:none !i
           </div>
           <div class="mag-cover">
             <span class="mag-eyebrow">이달의 특별 혜택</span>
-            <div class="mag-title">부모님 한복,<br>이렇게&nbsp;<span class="g">고르세요</span></div>
+            <div class="mag-title"><span class="lead">부모님이</span>가장&nbsp;<span class="g">빛나는</span>&nbsp;날</div>
             <p class="mag-sub">한복투어 후 <b>혼주한복 최고의 1순위 선택!</b></p>
             <div class="mag-lines">
               <div class="ev-block tight lead">
