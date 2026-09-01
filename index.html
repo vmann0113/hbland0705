@@ -255,7 +255,7 @@ body{ margin:0; font-family:'Pretendard',sans-serif; background-color:#dcdce2; m
   margin-top:3.8cqw !important; padding-top:3.8cqw !important; }
 
 /* 상단 타이포 여백 확대 */
-.hb-hero-in{ padding:8.5cqw 7.2cqw 0 !important; }
+.hb-hero-in{ padding:8.5cqw 7.2cqw 6cqw !important; }
 .mag-eyebrow{ margin-top:5cqw !important; }
 .mag-title{ margin-top:3cqw !important; }
 /* 글자가 시작되는 구간(≈22%)에서 이미 충분히 어둡도록 농도 재배치.
@@ -270,6 +270,45 @@ body{ margin:0; font-family:'Pretendard',sans-serif; background-color:#dcdce2; m
 .mag-lines .ev-tag{ color:#D8B98C !important; }
 .mag-lines .ev-tag .rn{ color:#D8B98C !important; }
 .mag-lines .mag-label{ color:#E6DED0 !important; }
+/* ══════════════ 히어로 : 사진 온전히 + 아래에 개별 박스 스택 ══════════════ */
+
+/* 사진(617px) 아래에 박스가 놓이도록 히어로를 늘림 */
+.hb-hero[data-ev="3"]{ min-height:min(256vw,1229px) !important; }
+.hb-hero[data-ev="2"]{ min-height:min(240vw,1152px) !important; }
+.hb-hero-model{ -webkit-mask-image:linear-gradient(to bottom,#000 82%,transparent 99%) !important;
+  mask-image:linear-gradient(to bottom,#000 82%,transparent 99%) !important; }
+
+/* 혜택 영역 : 다크 패널 해제 → 투명. 사진을 전혀 덮지 않는다 */
+.mag-lines{ margin:auto 0 0 !important; width:100% !important;
+  background:none !important; border:0 !important; box-shadow:none !important;
+  -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
+  padding:0 !important; display:flex !important; flex-direction:column; gap:2.6cqw; }
+
+/* 각 이벤트 = 개별 박스 */
+.mag-lines .ev-block{ position:relative; display:block !important;
+  background:linear-gradient(180deg,#FFFDFA,#FBF7F1) !important;
+  border:1px solid rgba(184,151,126,0.38) !important;
+  padding:3.6cqw 4.4cqw 3.8cqw 7.6cqw !important;
+  margin:0 !important; box-shadow:0 10px 26px -18px rgba(96,72,52,0.45) !important; }
+/* 좌측 골드 바 = 불릿 */
+.mag-lines .ev-block::before{ content:''; position:absolute; left:0; top:0; bottom:0;
+  width:3px; background:linear-gradient(180deg,#C9A986,#9B7A56); }
+.mag-lines .ev-block + .ev-block{ border-top:1px solid rgba(184,151,126,0.38) !important;
+  margin-top:0 !important; padding-top:3.6cqw !important; }
+
+/* 박스 안 : 밝은 바탕에 맞춰 다시 반전 */
+.mag-lines .ev-head{ margin-bottom:0.6cqw; }
+.mag-lines .ev-tag{ color:var(--hb-gold-dp) !important; }
+.mag-lines .ev-tag .rn{ color:var(--hb-gold-dp) !important; }
+.mag-lines .ev-line{ background:linear-gradient(90deg,rgba(184,151,126,0.45),rgba(184,151,126,0)) !important; }
+.mag-lines .mag-label{ color:#4A3B33 !important; }
+.mag-lines .mag-benefit{ color:#33251E !important; }
+.mag-lines .mag-benefit .hot{ color:#33251E !important; }
+.mag-lines .mag-big{ color:#33251E !important; }
+.mag-lines .mag-benefit s{ color:#A89A8E !important; }
+.mag-lines .mag-note{ color:#4A3B33 !important; background:none; border-top:0 !important;
+  padding-top:1cqw !important; margin-top:0.6cqw !important; }
+.mag-lines .mag-note b{ color:var(--hb-gold-dp) !important; }
 .info-sec{ padding:clamp(32px,5.5vw,60px) 20px; text-align:center; background:#ECECF1; border-top:1px solid rgba(184,151,126,0.45); }
 .info-sec h2{ font-family:'Paperlogy','Pretendard',sans-serif; font-size:clamp(20px,4.6vw,30px); color:var(--hb-navy); margin-bottom:clamp(30px,5vw,50px); font-weight:400; letter-spacing:-1px; }
 .dual-map-container{ display:grid; grid-template-columns:1fr 1fr; gap:30px; width:100%; max-width:1200px; margin:0 auto; }
