@@ -68,12 +68,13 @@ window.HB_ROULETTE_ENABLED = (window.HB_ROULETTE_ENABLED !== false);
     var finalURL=GAS_URL+"?name="+encodeURIComponent(name)+"&phone="+encodeURIComponent(phone)+"&prize="+encodeURIComponent(evResult)+"&branch="+encodeURIComponent(branch)+"&callback="+cb;
     var s=document.createElement('script'), done=false;
     function finish(msg,label){ if(done)return; done=true; try{delete window[cb];}catch(e){} if(s&&s.parentNode)s.parentNode.removeChild(s); alert(msg); btn.innerText=label; }
+    function fail(){ if(done)return; done=true; try{delete window[cb];}catch(e){} if(s&&s.parentNode)s.parentNode.removeChild(s); btn.disabled=false; btn.innerText='다시 신청하기'; alert('신청이 접수되지 않았습니다. 통신 상태를 확인하고 다시 눌러주세요. 계속 안 되면 전화로 접수해 드립니다.'); }
     window[cb]=function(data){ if(data&&data.result==="duplicate"){ finish("이미 참여하신 내역이 있습니다.","참여 완료"); } else { finish("프리미엄 혜택이 성공적으로 신청되었습니다! 담당자가 곧 연락드리겠습니다.","혜택 신청 완료"); } };
-    s.onload=function(){ setTimeout(function(){ finish("신청이 접수되었습니다! 확인 후 빠른 안내 도와드리겠습니다.","신청 완료"); },400); };
-    s.onerror=function(){ finish("신청이 접수되었습니다! 확인 후 빠른 안내 도와드리겠습니다.","신청 완료"); };
+    s.onload=function(){ setTimeout(function(){ fail(); },1200); };
+    s.onerror=function(){ fail(); };
     s.src=finalURL;
     document.body.appendChild(s);
-    setTimeout(function(){ finish("신청이 접수되었습니다! 확인 후 빠른 안내 도와드리겠습니다.","신청 완료"); },10000);
+    setTimeout(function(){ fail(); },10000);
   }
 
   var WHEEL = ["10만원 상품권","5만원 상품권","진주귀걸이 증정","10만원 상품권","5만원 상품권","진주귀걸이 증정"];
