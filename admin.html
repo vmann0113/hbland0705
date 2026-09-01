@@ -230,7 +230,7 @@ class Component extends DCLogic {
   }
   loadLeads(){
     if(this.state.leadsLoading) return;
-    if(!this._leadsArmed){ this._leadsArmed=true; this.setState({leadsErr:'조회를 켜기 전, 구글 Apps Script에 읽기(doGet action=list) 엔드포인트를 먼저 배포하세요. 배포 후 한 번 더 누르면 불러옵니다.'}); return; }
+    
     this.setState({leadsLoading:true, leadsErr:''});
     var self=this, cb='__hbLeads_'+Date.now(), s=document.createElement('script'), done=false;
     window[cb]=function(data){ done=true; try{delete window[cb];}catch(e){} var arr=Array.isArray(data)?data:((data&&(data.rows||data.data))||[]); self.setState({leads:arr, leadsLoading:false}); if(s&&s.parentNode)s.parentNode.removeChild(s); };
