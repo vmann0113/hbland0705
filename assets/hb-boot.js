@@ -282,6 +282,7 @@ window.HB_ROULETTE_ENABLED = (window.HB_ROULETTE_ENABLED !== false);
       if(bsel){ bsel.innerHTML=''; (cfg.dual||[cfg.name]).forEach(function(nm){ var o=document.createElement('option'); o.value=nm; o.text='당첨지급지점: '+nm; bsel.appendChild(o); }); }
       var mlines=document.querySelector('.mag-lines');
       if(mlines){ var _bd=_benefitsData(window.HB_BRANCH); var _bhtml=_bd?_buildBenefits(_bd):''; if(_bhtml) mlines.innerHTML=_bhtml; }
+      try{ var _hero=document.querySelector('.hb-hero'), _n=mlines.querySelectorAll('.ev-block').length; if(_hero&&_n) _hero.setAttribute('data-ev', _n); }catch(e){}
     }catch(e){}
   }
   window.hbSetBranch=function(c){ window.HB_BRANCH=c; applyBranch(); };
