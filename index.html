@@ -179,6 +179,58 @@ body{ margin:0; font-family:'Pretendard',sans-serif; background-color:#dcdce2; m
    히어로를 플렉스 컬럼으로 만들어 내부가 실제 높이를 차지하게 한다. */
 .hb-hero{ display:flex; flex-direction:column; }
 .hb-hero > .hb-hero-in{ flex:1 1 auto; height:auto; min-height:0; }
+/* ══════════════ 히어로 리디자인 ══════════════
+   장식을 걷어내고 사진을 주인공으로. 혜택은 하단 다크 패널로 반전. */
+
+/* 1) 산만한 장식 제거 : 매거진 상단바 · 프레임 테두리 · 코너마크 */
+.mag-top, .mag-hair{ display:none !important; }
+.hb-hero::before, .hb-hero::after{ display:none !important; }
+
+/* 2) 상단 여백과 로고 정돈 */
+.hb-hero-in{ padding:7.5cqw 7.2cqw 0 !important; }
+.mag-mast{ margin-bottom:0 !important; }
+.mag-mast-logo{ width:170px !important; height:auto !important; }
+
+/* 3) eyebrow : 골드 스몰캡 한 줄 */
+.mag-eyebrow{ margin-top:4.2cqw !important; font-family:'Pretendard',sans-serif !important;
+  font-style:normal !important; font-size:2.75cqw !important; font-weight:700 !important;
+  letter-spacing:0.22em !important; color:var(--hb-gold-dp) !important; }
+.mag-eyebrow::before{ content:''; display:inline-block; width:5.5cqw; height:1px;
+  background:var(--hb-gold-dp); vertical-align:middle; margin-right:2.2cqw; }
+
+/* 4) 타이틀 : 크게, 타이트하게 */
+.mag-title{ margin-top:2.4cqw !important; font-size:9.4cqw !important; line-height:1.18 !important;
+  letter-spacing:-0.03em !important; max-width:68% !important; text-shadow:0 2px 18px rgba(250,247,242,0.75) !important; }
+
+/* 5) 혜택 패널 : 밝은 카드 → 어두운 네이비로 반전, 좌우 끝까지 */
+.mag-lines{ margin:auto -7.2cqw 0 !important; width:auto !important;
+  background:linear-gradient(180deg, rgba(11,27,50,0.90), rgba(9,22,42,0.97)) !important;
+  -webkit-backdrop-filter:blur(6px) !important; backdrop-filter:blur(6px) !important;
+  border:0 !important; border-top:1px solid rgba(184,151,126,0.55) !important;
+  padding:5.4cqw 7.2cqw 6cqw !important; box-shadow:none !important; }
+
+/* 6) 패널 내부 : 어두운 바탕에 맞춰 반전 */
+.mag-lines .ev-block + .ev-block{ border-top:1px solid rgba(184,151,126,0.20) !important;
+  margin-top:3.4cqw !important; padding-top:3.4cqw !important; }
+.mag-lines .ev-tag{ color:#C9A986 !important; }
+.mag-lines .ev-tag .rn{ color:#C9A986 !important; }
+.mag-lines .ev-line{ background:linear-gradient(90deg,rgba(184,151,126,0.40),rgba(184,151,126,0)) !important; }
+.mag-lines .mag-label{ color:#DCD3C4 !important; font-size:3.4cqw !important; }
+.mag-lines .mag-benefit{ color:#F2E4C4 !important; }
+.mag-lines .mag-benefit .hot{ color:#F2E4C4 !important; }
+.mag-lines .mag-benefit s{ color:rgba(220,211,196,0.5) !important; }
+.mag-lines .mag-big{ color:#FFF3D4 !important; }
+.mag-lines .mag-note{ color:#DCD3C4 !important; border-top-color:rgba(184,151,126,0.22) !important; }
+.mag-lines .mag-note b{ color:#F2E4C4 !important; }
+
+/* 7) 스크림은 타이틀 영역만 아주 옅게 */
+.hb-hero-in::before{ background:linear-gradient(106deg, rgba(250,248,244,0.78) 0%,
+  rgba(250,248,244,0.5) 34%, rgba(250,248,244,0.12) 58%, rgba(250,248,244,0) 74%) !important; }
+/* 다크 패널 안에서는 밝은 배경용 텍스트 섀도를 전부 제거 (번짐 방지) */
+.mag-lines, .mag-lines *{ text-shadow:none !important; }
+.mag-lines .mag-big{ text-shadow:none !important; }
+/* 패널 하단을 다음 섹션 네이비와 정확히 맞춰 이음새 제거 */
+.mag-lines{ background:linear-gradient(180deg, rgba(11,27,50,0.90) 0%, #0A1D37 88%) !important; }
 .info-sec{ padding:clamp(32px,5.5vw,60px) 20px; text-align:center; background:#ECECF1; border-top:1px solid rgba(184,151,126,0.45); }
 .info-sec h2{ font-family:'Paperlogy','Pretendard',sans-serif; font-size:clamp(20px,4.6vw,30px); color:var(--hb-navy); margin-bottom:clamp(30px,5vw,50px); font-weight:400; letter-spacing:-1px; }
 .dual-map-container{ display:grid; grid-template-columns:1fr 1fr; gap:30px; width:100%; max-width:1200px; margin:0 auto; }
