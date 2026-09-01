@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&display=swap">
 <style>
-@font-face{font-family:'Jalnan';font-display:swap;src:url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/Jalnan.woff') format('woff');}
+@font-face{font-family:'Paperlogy';font-display:swap;src:url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2');}
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
 body{font-family:'Pretendard',sans-serif;background:#0A1D37;color:#F3ECE1;}
@@ -22,22 +22,22 @@ body{font-family:'Pretendard',sans-serif;background:#0A1D37;color:#F3ECE1;}
 
   <div style="background:radial-gradient(120% 90% at 50% 0%, rgba(184,151,126,0.14), rgba(10,29,55,0) 60%);padding:34px 22px 26px;border-bottom:1px solid rgba(184,151,126,0.3);">
     <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;letter-spacing:0.22em;color:#B8977E;text-transform:uppercase;">Hanbeam · Winners</div>
-    <div style="font-family:'Jalnan','Pretendard',sans-serif;font-size:clamp(24px,4vw,34px);color:#F5EFE4;margin:8px 0 4px;letter-spacing:-0.5px;">당첨자 현황</div>
+    <div style="font-family:'Paperlogy','Pretendard',sans-serif;font-size:clamp(24px,4vw,34px);color:#F5EFE4;margin:8px 0 4px;letter-spacing:-0.5px;">당첨자 현황</div>
     <div style="font-size:13.5px;color:rgba(243,236,225,0.7);line-height:1.6;max-width:600px;">이벤트 룰렛 <b style="color:#E7CE93;">당첨·신청 내역</b>을 지점별로 확인합니다. 당첨자에게 연락해 혜택을 안내하세요.</div>
   </div>
 
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:22px 18px 0;">
     <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(184,151,126,0.28);border-radius:10px;padding:14px 12px;text-align:center;">
       <div style="font-size:11.5px;color:rgba(243,236,225,0.6);font-weight:600;">전체 신청</div>
-      <div style="font-family:'Jalnan','Pretendard',sans-serif;font-size:clamp(20px,3.4vw,28px);color:#E7CE93;margin-top:4px;">{{ totalCount }}</div>
+      <div style="font-family:'Paperlogy','Pretendard',sans-serif;font-size:clamp(20px,3.4vw,28px);color:#E7CE93;margin-top:4px;">{{ totalCount }}</div>
     </div>
     <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(184,151,126,0.28);border-radius:10px;padding:14px 12px;text-align:center;">
       <div style="font-size:11.5px;color:rgba(243,236,225,0.6);font-weight:600;">오늘</div>
-      <div style="font-family:'Jalnan','Pretendard',sans-serif;font-size:clamp(20px,3.4vw,28px);color:#F5EFE4;margin-top:4px;">{{ todayCount }}</div>
+      <div style="font-family:'Paperlogy','Pretendard',sans-serif;font-size:clamp(20px,3.4vw,28px);color:#F5EFE4;margin-top:4px;">{{ todayCount }}</div>
     </div>
     <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(184,151,126,0.28);border-radius:10px;padding:14px 12px;text-align:center;">
       <div style="font-size:11.5px;color:rgba(243,236,225,0.6);font-weight:600;">표시 중</div>
-      <div style="font-family:'Jalnan','Pretendard',sans-serif;font-size:clamp(20px,3.4vw,28px);color:#F5EFE4;margin-top:4px;">{{ shownCount }}</div>
+      <div style="font-family:'Paperlogy','Pretendard',sans-serif;font-size:clamp(20px,3.4vw,28px);color:#F5EFE4;margin-top:4px;">{{ shownCount }}</div>
     </div>
   </div>
 
@@ -66,7 +66,7 @@ body{font-family:'Pretendard',sans-serif;background:#0A1D37;color:#F3ECE1;}
         <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(184,151,126,0.28);border-radius:14px;padding:14px 16px;margin-bottom:10px;">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
             <div style="display:flex;align-items:center;gap:10px;min-width:0;">
-              <span style="font-family:'Jalnan','Pretendard',sans-serif;font-size:17px;color:#F5EFE4;">{{ r.name }}</span>
+              <span style="font-family:'Paperlogy','Pretendard',sans-serif;font-size:17px;color:#F5EFE4;">{{ r.name }}</span>
               <span style="font-size:11.5px;font-weight:700;color:#E7CE93;background:rgba(184,151,126,0.16);border:1px solid rgba(184,151,126,0.4);padding:3px 9px;border-radius:6px;white-space:nowrap;">{{ r.branch }}</span>
             </div>
             <a style="font-size:13px;font-weight:700;color:#8ad0ff;text-decoration:none;white-space:nowrap;font-family:ui-monospace,monospace;" href="{{ r.telHref }}">{{ r.phone }}</a>
@@ -159,7 +159,7 @@ class Component extends DCLogic {
     })).map(function(ch){
       var on=filter===ch.code;
       return { label:ch.label,
-        style:{ whiteSpace:'nowrap',padding:'8px 14px',borderRadius:'999px',cursor:'pointer',fontWeight:'700',fontSize:'13px',fontFamily:"'Jalnan','Pretendard',sans-serif",
+        style:{ whiteSpace:'nowrap',padding:'8px 14px',borderRadius:'999px',cursor:'pointer',fontWeight:'700',fontSize:'13px',fontFamily:"'Paperlogy','Pretendard',sans-serif",
           border:on?'1px solid #B8977E':'1px solid rgba(184,151,126,0.4)', background:on?'#B8977E':'transparent', color:on?'#0A1D37':'rgba(243,236,225,0.7)' },
         onPick:function(){ self.setState({filter:ch.code}); } };
     });
