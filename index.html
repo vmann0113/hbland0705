@@ -30,7 +30,7 @@
 @font-face{font-family:'Gmarket Sans';font-weight:500;font-style:normal;font-display:swap;src:url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');}
 @font-face{font-family:'Gmarket Sans';font-weight:700;font-style:normal;font-display:swap;src:url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');}
 @font-face{font-family:'Paperlogy';font-style:normal;font-display:swap;src:url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2');}
-:root{ --hb-ink:#14171B; --hb-gold-dp:#9B7A56; --hb-gold-lt:#E7CE93; --hb-navy:#0A1D37; --hb-gold:#B8977E; --hb-bg-gray:#eeeef1; --hb-line-blue:#1b4b9b; --pc-max-width:480px; --naver-green:#03C75A; --kakao-yellow:#FEE500; }
+:root{ --hb-ink:#33251E; --hb-gold-dp:#9B7A56; --hb-gold-lt:#E7CE93; --hb-navy:#0A1D37; --hb-gold:#B8977E; --hb-bg-gray:#eeeef1; --hb-line-blue:#1b4b9b; --pc-max-width:480px; --naver-green:#03C75A; --kakao-yellow:#FEE500; }
 *{ box-sizing:border-box; -webkit-font-smoothing:antialiased; }
 body{ margin:0; font-family:'Pretendard',sans-serif; background-color:#dcdce2; min-height:100vh; }
 .main-wrapper{ width:100%; max-width:var(--pc-max-width); margin:0 auto; background-color:var(--hb-bg-gray); min-height:100vh; box-shadow:0 0 50px rgba(10,29,55,0.16); }
@@ -133,7 +133,7 @@ body{ margin:0; font-family:'Pretendard',sans-serif; background-color:#dcdce2; m
 .ev-line{ background:linear-gradient(90deg,rgba(184,151,126,0.55),rgba(184,151,126,0)) !important; }
 /* 라벨: 조금 작게, 자간 타이트 */
 .mag-label{ margin-top:0.7cqw !important; padding-left:0 !important; font-size:3.5cqw !important;
-  font-weight:700 !important; letter-spacing:-0.035em !important; color:#2A3550 !important; }
+  font-weight:700 !important; letter-spacing:-0.035em !important; color:#4A3B33 !important; }
 /* 혜택: 이탤릭 제거 + Paperlogy 로 통일, 밀도 위해 위 여백 축소 */
 .mag-benefit{ margin-top:0 !important; font-family:'Paperlogy','Pretendard',sans-serif !important;
   font-style:normal !important; font-weight:400 !important; font-size:5.4cqw !important;
@@ -144,6 +144,24 @@ body{ margin:0; font-family:'Pretendard',sans-serif; background-color:#dcdce2; m
 .mag-benefit .hot{ color:var(--hb-ink); font-weight:400; }
 .mag-big{ font-size:1.28em !important; text-shadow:none !important; }
 .mag-note{ margin-top:1.6cqw !important; padding-top:1.6cqw !important; font-size:2.95cqw !important; }
+/* ── 강조 수치: 무게를 덜고 톤을 사진에 맞춤 ── */
+.mag-benefit{ font-weight:400 !important; letter-spacing:-0.015em !important; }
+/* 숫자만 크게, 단위(만원/회)는 한 톤 작고 가볍게 — 덩어리로 뭉쳐 보이던 문제 해소 */
+.mag-big{ font-size:1.34em !important; letter-spacing:-0.02em; }
+/* 취소선 정가: 차가운 회색 → 따뜻한 회갈색 */
+.mag-benefit s{ color:#A89A8E !important; text-decoration-thickness:1px; text-underline-offset:2px; }
+/* 화살표를 골드로 빼서 검은 덩어리를 끊어줌 */
+.mag-benefit{ --arrow:var(--hb-gold-dp); }
+.mag-benefit .hot{ color:var(--hb-ink) !important; }
+/* ── 라벨↔혜택 간격 통일 ──
+   큰 숫자(.mag-big)가 줄상자를 키워 줄마다 간격이 달라지던 문제.
+   컨테이너 line-height 를 최대 글자보다 크게 고정해 행 높이를 일정하게 만든다. */
+.mag-benefit{ line-height:1.42 !important; min-height:1.42em; }
+.mag-big{ line-height:1 !important; vertical-align:baseline; }
+.mag-lines .ev-block .mag-benefit,
+.mag-lines .ev-block.tight .mag-benefit,
+.mag-lines .ev-block.lead .mag-benefit{ margin-top:0.2cqw !important; }
+.mag-label{ line-height:1.25 !important; }
 .info-sec{ padding:clamp(32px,5.5vw,60px) 20px; text-align:center; background:#ECECF1; border-top:1px solid rgba(184,151,126,0.45); }
 .info-sec h2{ font-family:'Paperlogy','Pretendard',sans-serif; font-size:clamp(20px,4.6vw,30px); color:var(--hb-navy); margin-bottom:clamp(30px,5vw,50px); font-weight:400; letter-spacing:-1px; }
 .dual-map-container{ display:grid; grid-template-columns:1fr 1fr; gap:30px; width:100%; max-width:1200px; margin:0 auto; }
