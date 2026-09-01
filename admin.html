@@ -89,10 +89,10 @@ image-slot{--is-bg:rgba(255,255,255,0.04);}
   </div>
 
   <div class="am-tabs">
+    <button class="{{ tabTrafficCls }}" onClick="{{ goTraffic }}">당첨 · 리드</button>
     <button class="{{ tabRouletteCls }}" onClick="{{ goRoulette }}">룰렛 · 링크</button>
     <button class="{{ tabImagesCls }}" onClick="{{ goImages }}">지점별 이미지</button>
     <button class="{{ tabBenefitsCls }}" onClick="{{ goBenefits }}">지점별 혜택</button>
-    <button class="{{ tabTrafficCls }}" onClick="{{ goTraffic }}">당첨 · 리드</button>
   </div>
 
   <div class="am-body">
@@ -219,7 +219,7 @@ class Component extends DCLogic {
   ];
   STORE_KEY = 'hbBranchRoulette';
   BEN_KEY = 'hbBranchBenefits';
-  state = { tab:'roulette', on:{}, copied:'', imgBranch:'bs', benBranch:'bs', ben:{}, benSaved:'', leads:null, leadsLoading:false, leadsErr:'' };
+  state = { tab:'traffic', on:{}, copied:'', imgBranch:'bs', benBranch:'bs', ben:{}, benSaved:'', leads:null, leadsLoading:false, leadsErr:'' };
 
   componentDidMount(){
     const def={}; this.BRANCHES.forEach(b=>def[b.code]= b.code!=='dg');
@@ -227,7 +227,8 @@ class Component extends DCLogic {
     let ben={}; try{ ben=JSON.parse(localStorage.getItem(this.BEN_KEY)||'{}')||{}; }catch(e){}
     this.setState({ on: saved&&typeof saved==='object'? Object.assign(def,saved): def, ben });
     this.loadSettings();
-    window.__hbOnLogin=()=>{ this.loadSettings(); };
+    if(window.__hbToken) this.loadLeads();
+    window.__hbOnLogin=()=>{ this.loadSettings(); this.loadLeads(); };
   }
   loadLeads(){
     if(this.state.leadsLoading) return;
