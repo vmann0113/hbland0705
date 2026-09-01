@@ -18,7 +18,7 @@ window.HB_ROULETTE_ENABLED = (window.HB_ROULETTE_ENABLED !== false);
     _naverLoading=true;
     window.navermap_authFailure=function(){ _osmFallbackAll(); };
     var s=document.createElement('script');
-    s.src='https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId='+NAVER_MAP_KEY;
+    s.src='https://openapi.map.naver.com/openapi/v3/maps.js?ncpKeyId='+NAVER_MAP_KEY;
     s.onload=function(){ _naverReady=(typeof naver!=='undefined'&&!!naver.maps); _flushMaps(); };
     s.onerror=function(){ _naverReady=false; _flushMaps(); };
     document.head.appendChild(s);
