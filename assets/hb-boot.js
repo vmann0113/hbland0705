@@ -247,7 +247,7 @@ window.HB_ROULETTE_ENABLED = (window.HB_ROULETTE_ENABLED !== false);
       +'<div class="mag-label">'+_escH(ev.label||'')+'</div>'
       +'<div class="mag-benefit">'+benefit+'</div></div>';
   }
-  function _buildBenefits(data){ if(!data||!data.events||!data.events.length) return ''; var evs=data.events.filter(function(e){ return (e.label&&String(e.label).trim())||(e.hot&&String(e.hot).trim()); }); if(!evs.length) return ''; var h=evs.map(_benefitBlock).join(''); if(data.note) h+='<div class="mag-note">'+data.note+'</div>'; return h; }
+  function _buildBenefits(data){ if(!data||!data.events||!data.events.length) return ''; var evs=data.events.filter(function(e){ return (e.label&&String(e.label).trim())||(e.hot&&String(e.hot).trim()); }); if(!evs.length) return ''; var bl=evs.map(_benefitBlock); if(data.note&&bl.length){ bl[bl.length-1]=bl[bl.length-1].replace(/<\/div>$/, '<div class="mag-note">'+data.note+'</div></div>'); } return bl.join(''); }
   function _benefitsData(code){
     try{ var m=JSON.parse(localStorage.getItem('hbBranchBenefits')||'null'); if(m&&m[code]&&m[code].events&&m[code].events.length) return m[code]; }catch(e){}
     var D=window.HB_BENEFITS_DATA||{}; return D[code]||D._default||null;
