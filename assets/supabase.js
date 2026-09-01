@@ -75,7 +75,11 @@
       body: JSON.stringify({ email: email, password: password })
     }).then(function (r) {
       return r.json().then(function (j) {
-        if (!r.ok) throw new Error(j.error_description || j.msg || '로그인 실패');
+        if (!r.ok) {
+          var e = new Error(j.error_description || j.msg || j.message || '로그인 실패');
+          e.code = j.error_code || j.error || ('http_' + r.status);
+          throw e;
+        }
         return j.access_token;
       });
     });

@@ -235,7 +235,16 @@ class Component extends DCLogic {
     if(!window.__hbToken){ this.setState({leadsErr:'로그인이 필요합니다.'}); return; }
     this.setState({leadsLoading:true, leadsErr:''});
     HBDB.listLeads(window.__hbToken)
-      .then(function(rows){ self.setState({leads:rows||[], leadsLoading:false}); })
+      .then(function(rows){
+        rows = rows || [];
+        var msg = '';
+        if(!rows.length){
+          /* RLS 는 권한이 없으면 오류 대신 빈 배열을 준다.
+             "데이터 없음"과 "권한 없음"을 화면에서 구분해 준다. */
+          msg = '조회 결과가 0건입니다. 실제로 신청이 없거나, admins 테이블에 등록된 이메일이 로그인 계정과 다를 수 있습니다.';
+        }
+        self.setState({leads:rows, leadsLoading:false, leadsErr:msg});
+      })
       .catch(function(e){
         var m=String(e&&e.message||'');
         if(m.indexOf('401')>=0||m.indexOf('403')>=0){ self.setState({leadsLoading:false, leadsErr:'세션이 만료되었습니다. 다시 로그인하세요.'}); if(window.__hbLogout) window.__hbLogout(); return; }
@@ -378,8 +387,14 @@ class Component extends DCLogic {
     HBDB.signIn(em,pw).then(function(tok){
       window.__hbToken=tok; try{ sessionStorage.setItem(KEY,tok); }catch(e){}
       hide(); if(window.__hbOnLogin) window.__hbOnLogin();
-    }).catch(function(){
-      er.textContent='로그인에 실패했습니다. 이메일과 비밀번호를 확인하세요.';
+    }).catch(function(e){
+      var c=(e&&e.code)||'', m=(e&&e.message)||'';
+      var t;
+      if(c==='email_not_confirmed') t='이메일 확인이 안 된 계정입니다. Supabase → Authentication → Users 에서 Confirm 처리하세요.';
+      else if(c==='invalid_credentials') t='이메일 또는 비밀번호가 올바르지 않습니다.';
+      else if(c==='email_provider_disabled') t='이메일 로그인이 비활성화되어 있습니다.';
+      else t='로그인 실패';
+      er.innerHTML=t+'<br><span style="opacity:.65;font-size:11px;">['+(c||'?')+'] '+m+'</span>';
       btn.disabled=false; btn.textContent='로그인';
     });
   }
