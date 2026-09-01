@@ -7,8 +7,8 @@ window.HB_ROULETTE_ENABLED = (window.HB_ROULETTE_ENABLED !== false);
 
   var NAVER_MAP_KEY='pgxefrkkuy';
   var _naverLoading=false, _naverReady=false, _naverDone=false, _mapQueue=[], _hbMaps=[];
-  function _osmURL(g){ var lat=g[0], lon=g[1]; return 'https://www.openstreetmap.org/export/embed.html?bbox='+(lon-0.004).toFixed(4)+'%2C'+(lat-0.003).toFixed(4)+'%2C'+(lon+0.004).toFixed(4)+'%2C'+(lat+0.003).toFixed(4)+'&layer=mapnik&marker='+lat.toFixed(4)+'%2C'+lon.toFixed(4); }
-  function _osmInto(el,g){ el.innerHTML='<iframe src="'+_osmURL(g)+'" style="width:100%;height:100%;border:0;display:block;" loading="lazy"></iframe>'; }
+
+  function _osmInto(el,g){ var c=el.parentNode, a=c&&c.querySelector('.addr-text'); var q=encodeURIComponent((a&&(a.innerText||a.textContent))||'한빔한복'); el.innerHTML='<a href="https://map.naver.com/p/search/'+q+'" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:#0A1D37;color:#E7CE93;text-decoration:none;font-weight:700;font-size:15px;">네이버지도에서 위치 보기 →</a>'; }
   function _osmFallbackAll(){ _naverReady=false; _hbMaps.forEach(function(m){ if(!m.el.querySelector('iframe')) _osmInto(m.el,m.g); }); }
   function _flushMaps(){ _naverDone=true; var q=_mapQueue.slice(); _mapQueue=[]; q.forEach(function(f){ try{f();}catch(e){} }); }
   function _loadNaver(cb){
@@ -23,7 +23,7 @@ window.HB_ROULETTE_ENABLED = (window.HB_ROULETTE_ENABLED !== false);
     s.onerror=function(){ _naverReady=false; _flushMaps(); };
     document.head.appendChild(s);
     setTimeout(function(){ if(!_naverDone){ _naverReady=(typeof naver!=='undefined'&&!!naver.maps); _flushMaps(); } }, 6000);
-    setTimeout(function(){ _hbMaps.forEach(function(m){ if(!m.el.querySelector('iframe') && !m.el.querySelector('canvas,img')) _osmInto(m.el,m.g); }); }, 3500);
+
   }
 
   var ROULETTE_ENABLED = (window.HB_ROULETTE_ENABLED !== false) && !_adminOff && _rp!=='off';
