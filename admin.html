@@ -189,13 +189,7 @@ image-slot{--is-bg:rgba(255,255,255,0.04);}
       <sc-if value="{{ leadsErr }}" hint-placeholder-val="{{ false }}">
         <div class="am-hint" style="color:#e6a5a5;">{{ leadsErr }} · 구글 시트 읽기 엔드포인트 배포를 확인하세요.</div>
       </sc-if>
-      <div class="am-imgh">지점별 리드(신청) 건수</div>
-      <sc-for list="{{ leadRows }}" as="b" hint-placeholder-count="9">
-        <div class="am-card">
-          <div class="am-row1"><div class="am-bl"><span class="am-dot" style="{{ b.dotStyle }}"></span><div class="am-name">{{ b.name }}</div></div><div class="am-name" style="color:#E7CE93;">{{ b.cnt }}</div></div>
-        </div>
-      </sc-for>
-      <div class="am-imgh" style="margin-top:16px;">최근 신청 내역</div>
+      <div class="am-imgh">당첨자 명단</div>
       <sc-for list="{{ recentLeads }}" as="r" hint-placeholder-count="6">
         <div class="am-card">
           <div class="am-row1"><div class="am-bl"><div style="min-width:0;"><div class="am-name" style="font-size:15px;">{{ r.name }}</div><div class="am-url">{{ r.sub }}</div></div></div></div>
@@ -319,14 +313,13 @@ class Component extends DCLogic {
     const cur=this.state.imgBranch;
     const bc=this.state.benBranch; const curB=this.curBen(bc); const _roman=['Ⅰ','Ⅱ','Ⅲ','Ⅳ','Ⅴ'];
     const _leads=this.state.leads; const _mask=this._mask.bind(this);
-    const leadRows=this.BRANCHES.map(function(b){ var cfg=(window.HB_BRANCHES&&window.HB_BRANCHES[b.code])||{}; var names=cfg.dual||[cfg.name||b.name]; var cnt=_leads?_leads.filter(function(L){return names.indexOf(L.branch)>=0;}).length:null; return { name:b.name, cnt: cnt==null?'—':String(cnt), dotStyle:{background:'#B8977E'} }; });
     /* 지점 코드 → 저장된 표시 이름들 (bs → ["부산점","센텀점"]) */
     const _bNames=(code)=>{ var c=(window.HB_BRANCHES&&window.HB_BRANCHES[code])||{}; return c.dual||[c.name||code]; };
     const _sel=this.state.leadBranch;
     const _view=(_leads&&_sel)? _leads.filter(function(L){ return _bNames(_sel).indexOf(L.branch)>=0; }) : _leads;
     /* listLeads 가 created_at 내림차순으로 주므로 뒤집지 않는다.
        시각 필드도 Supabase 의 created_at 을 본다. */
-    const recentLeads=_view?_view.slice(0,30).map(function(L){
+    const recentLeads=_view?_view.slice(0,500).map(function(L){
       var tm=L.created_at||L.time||'';
       if(tm) tm=String(tm).replace('T',' ').slice(0,16);
       return { name:_mask(L.name)+' · '+(L.branch||''), sub:(L.prize||'—')+(tm?' · '+tm:'') };
@@ -364,7 +357,7 @@ class Component extends DCLogic {
       onBenReset:()=>this.resetBen(bc),
       benSaved:this.state.benSaved,
       benOpen:()=>{ try{ const f=encodeURIComponent('한빔한복 통합예약센터.dc.html'); const base=location.href.split('?')[0].replace(/[^\/]*$/, f); window.open(base+'?b='+bc,'_blank'); }catch(e){} },
-      leadRows, recentLeads, leadsStatus, leadsErr:this.state.leadsErr,
+      recentLeads, leadsStatus, leadsErr:this.state.leadsErr,
       leadBranch:this.state.leadBranch,
       leadBranchOpts:[{value:'',label:'전체 보기'}].concat(this.BRANCHES.map(b=>({value:b.code,label:b.name}))),
       onLeadBranch:(e)=>this.setState({leadBranch:e.target.value}),
