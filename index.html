@@ -353,6 +353,27 @@ body{ margin:0; font-family:'Pretendard',sans-serif; background-color:#dcdce2; m
   backdrop-filter:blur(5px) saturate(1.05) !important;
   border:1px solid rgba(184,151,126,0.50) !important;
   box-shadow:0 16px 36px -22px rgba(80,58,42,0.55) !important; }
+/* 타이틀 아래 포지셔닝 문구 */
+.mag-sub{ margin:2.4cqw 0 0 !important; max-width:70%; font-family:'Pretendard',sans-serif;
+  font-size:3.1cqw; font-weight:600; line-height:1.45; letter-spacing:-0.025em;
+  color:#4A3B33; word-break:keep-all;
+  text-shadow:0 1px 10px rgba(250,247,242,0.9); }
+.mag-sub b{ font-weight:800; color:var(--hb-gold-dp); }
+
+/* ── 카드 압축 : 한 화면에 들어오도록 ── */
+.mag-lines{ gap:1.8cqw !important; }
+.mag-lines .ev-block{ padding:2.7cqw 4cqw 2.9cqw 6.4cqw !important; }
+.mag-lines .ev-head{ margin-bottom:0.2cqw !important; }
+.mag-lines .ev-tag{ font-size:2.2cqw !important; }
+.mag-lines .mag-label{ font-size:3.1cqw !important; margin-top:0.4cqw !important; }
+.mag-lines .mag-benefit{ font-size:5.1cqw !important; margin-top:0.1cqw !important; }
+.mag-lines .ev-block.lead .mag-benefit{ font-size:5.7cqw !important; }
+.mag-lines .mag-big{ font-size:1.44em !important; }
+.mag-lines .mag-note{ font-size:2.8cqw !important; padding-top:0.6cqw !important; }
+
+/* 압축된 만큼 히어로도 낮춤 */
+.hb-hero[data-ev="3"]{ min-height:min(152vw,730px) !important; }
+.hb-hero[data-ev="2"]{ min-height:min(136vw,653px) !important; }
 .info-sec{ padding:clamp(32px,5.5vw,60px) 20px; text-align:center; background:#ECECF1; border-top:1px solid rgba(184,151,126,0.45); }
 .info-sec h2{ font-family:'Paperlogy','Pretendard',sans-serif; font-size:clamp(20px,4.6vw,30px); color:var(--hb-navy); margin-bottom:clamp(30px,5vw,50px); font-weight:400; letter-spacing:-1px; }
 .dual-map-container{ display:grid; grid-template-columns:1fr 1fr; gap:30px; width:100%; max-width:1200px; margin:0 auto; }
@@ -744,6 +765,7 @@ footer,footer span,footer div{ color:#c9bfae !important; text-decoration:none !i
           <div class="mag-cover">
             <span class="mag-eyebrow">이달의 특별 혜택</span>
             <div class="mag-title">부모님 한복,<br>이렇게&nbsp;<span class="g">고르세요</span></div>
+            <p class="mag-sub">한복투어 후 <b>혼주한복 최고의 1순위 선택!</b></p>
             <div class="mag-lines">
               <div class="ev-block tight lead">
                 <div class="ev-head"><span class="ev-tag">이벤트 <span class="rn">Ⅰ</span></span><span class="ev-line"></span></div>
