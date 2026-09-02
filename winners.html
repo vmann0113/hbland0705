@@ -16,6 +16,7 @@
 html,body{margin:0;padding:0;}
 body{font-family:'Pretendard',sans-serif;background:#0A1D37;color:#F3ECE1;}
 </style>
+<script src="assets/supabase.js"></script>
 <script src="assets/branches.js"></script>
 </helmet>
 <div style="max-width:860px;margin:0 auto;padding:0 0 90px;">
@@ -88,26 +89,22 @@ body{font-family:'Pretendard',sans-serif;background:#0A1D37;color:#F3ECE1;}
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  GAS_URL = 'https://script.google.com/macros/s/AKfycbzFX0_bpw0It_r6uon9km3qzfYjnoCwoZx_y5GsOwyDcJCUSlcxhHCbXs2FwmoNyhvE/exec';
   state = { leads:null, loading:false, err:'', filter:'ALL', query:'' };
 
   componentDidMount(){ this.loadLeads(); }
 
   loadLeads(){
     if(this.state.loading) return;
+    if(!window.__hbToken){ this.setState({loading:false, err:'로그인이 필요합니다.'}); return; }
     this.setState({loading:true, err:''});
-    var self=this, cb='__hbW_'+Date.now(), s=document.createElement('script'), done=false;
-    window[cb]=function(data){ done=true; try{delete window[cb];}catch(e){}
-      var arr=Array.isArray(data)?data:((data&&(data.rows||data.data))||[]);
-      self.setState({leads:arr, loading:false});
-      if(s&&s.parentNode)s.parentNode.removeChild(s);
-    };
-    s.src=this.GAS_URL+(this.GAS_URL.indexOf('?')>=0?'&':'?')+'action=list&callback='+cb;
-    s.onerror=function(){ self.setState({loading:false, err:'불러오기 실패 · 인터넷 연결을 확인하세요.'}); if(s&&s.parentNode)s.parentNode.removeChild(s); };
-    document.body.appendChild(s);
-    setTimeout(function(){ if(!done){ try{delete window[cb];}catch(e){}
-      self.setState(function(st){ return st.leads?{loading:false}:{loading:false, err:'응답이 없습니다. 구글 Apps Script에 조회(doGet · action=list) 엔드포인트가 배포됐는지 확인하세요.'}; });
-    } },9000);
+    var self=this;
+    HBDB.listLeads(window.__hbToken)
+      .then(function(rows){ self.setState({leads:rows||[], loading:false}); })
+      .catch(function(e){
+        var m=String(e&&e.message||'');
+        if(m.indexOf('401')>=0||m.indexOf('403')>=0){ self.setState({loading:false, err:'세션이 만료되었습니다. 다시 로그인하세요.'}); if(window.__hbLogout) window.__hbLogout(); return; }
+        self.setState({loading:false, err:'불러오기 실패'});
+      });
   }
 
   _parseKST(t){
@@ -183,6 +180,52 @@ class Component extends DCLogic {
     };
   }
 }
+</script>
+<script>
+/* 당첨자 명단은 개인정보이므로 로그인 없이는 볼 수 없다.
+   DC 런타임 재렌더의 영향을 받지 않도록 document.body 에 직접 붙인다. */
+(function(){
+  var KEY='hbAdminToken', el;
+  function build(){
+    el=document.createElement('div'); el.id='hbLogin';
+    el.style.cssText='position:fixed;inset:0;z-index:2147483647;background:#0A1D37;display:flex;align-items:center;justify-content:center;padding:24px;font-family:Pretendard,sans-serif;';
+    el.innerHTML='<div style="width:100%;max-width:340px;">'
+      +'<div style="color:#C9A986;font-size:12px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:10px;">Hanbeam Winners</div>'
+      +'<div style="color:#F5EFE4;font-size:22px;font-weight:800;margin-bottom:22px;">당첨자 명단 로그인</div>'
+      +'<input id="hbEmail" type="email" placeholder="이메일" autocomplete="username" style="width:100%;box-sizing:border-box;padding:13px 14px;margin-bottom:9px;border-radius:8px;border:1px solid rgba(184,151,126,.35);background:#0e2444;color:#F5EFE4;font-size:15px;">'
+      +'<input id="hbPw" type="password" placeholder="비밀번호" autocomplete="current-password" style="width:100%;box-sizing:border-box;padding:13px 14px;border-radius:8px;border:1px solid rgba(184,151,126,.35);background:#0e2444;color:#F5EFE4;font-size:15px;">'
+      +'<div id="hbAuthErr" style="color:#e59a9a;font-size:13px;min-height:19px;margin:9px 0 2px;"></div>'
+      +'<button id="hbLoginBtn" style="width:100%;padding:13px;border:0;border-radius:8px;background:#C9A986;color:#0A1D37;font-weight:800;font-size:15px;cursor:pointer;">로그인</button>'
+      +'</div>';
+    document.body.appendChild(el);
+    el.querySelector('#hbLoginBtn').addEventListener('click', doLogin);
+    el.querySelector('#hbPw').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+  }
+  function show(){ if(el) el.style.display='flex'; }
+  function hide(){ if(el) el.style.display='none'; }
+  function doLogin(){
+    var em=el.querySelector('#hbEmail').value.trim(), pw=el.querySelector('#hbPw').value;
+    var er=el.querySelector('#hbAuthErr'), btn=el.querySelector('#hbLoginBtn');
+    if(!em||!pw){ er.textContent='이메일과 비밀번호를 입력하세요.'; return; }
+    if(!(window.HBDB&&HBDB.signIn)){ er.textContent='초기화 중입니다. 잠시 후 다시 눌러주세요.'; return; }
+    btn.disabled=true; btn.textContent='확인 중...'; er.textContent='';
+    HBDB.signIn(em,pw).then(function(tok){
+      window.__hbToken=tok; try{ sessionStorage.setItem(KEY,tok); }catch(e){}
+      hide(); if(window.__hbOnLogin) window.__hbOnLogin();
+    }).catch(function(e){
+      var c=(e&&e.code)||'', m=(e&&e.message)||'';
+      er.innerHTML=(c==='email_not_confirmed'?'이메일 확인이 안 된 계정입니다.':'로그인에 실패했습니다.')
+        +'<br><span style="opacity:.65;font-size:11px;">['+(c||'?')+'] '+m+'</span>';
+      btn.disabled=false; btn.textContent='로그인';
+    });
+  }
+  function init(){
+    build();
+    try{ var t=sessionStorage.getItem(KEY); if(t){ window.__hbToken=t; hide(); } }catch(e){}
+    window.__hbLogout=function(){ try{ sessionStorage.removeItem(KEY); }catch(e){} window.__hbToken=null; show(); };
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
 </script>
 </body>
 </html>
