@@ -248,7 +248,7 @@ class Component extends DCLogic {
   componentDidMount(){
     const def={}; this.BRANCHES.forEach(b=>def[b.code]= b.code!=='dg');
     let saved=null; try{ saved=JSON.parse(localStorage.getItem(this.STORE_KEY)||'null'); }catch(e){}
-    let ben={}; try{ ben=JSON.parse(localStorage.getItem(this.BEN_KEY)||'{}')||{}; }catch(e){}
+    let ben={};  /* 혜택은 서버(branch_settings.benefits)에서 loadSettings 로 채운다 */
     this.setState({ on: saved&&typeof saved==='object'? Object.assign(def,saved): def, ben });
     this.loadSettings();
     if(window.__hbToken) this.loadLeads();
@@ -285,7 +285,9 @@ class Component extends DCLogic {
       .catch(function(e){ alert("저장 실패: "+(e&&e.message||"")+" 화면 값이 서버와 다를 수 있습니다."); self.loadSettings(); });
   }
   loadSettings(){ var self=this;
-    HBDB.getSettings().then(function(m){ if(m) self.setState({on:m}); });
+    HBDB.getSettings().then(function(m){ if(!m) return;
+      var st={}; if(m.roulette) st.on=m.roulette; if(m.benefits) st.ben=m.benefits;
+      self.setState(st); });
   }
   toggle(code){ this.setState(s=>{ const on=Object.assign({},s.on,{[code]:!s.on[code]}); this.persist(on, code); return {on}; }); }
   setAll(v){ const on={}; this.BRANCHES.forEach(b=>on[b.code]=v); this.setState({on});
@@ -309,8 +311,30 @@ class Component extends DCLogic {
   addEvent(code){ const d=JSON.parse(JSON.stringify(this.curBen(code))); if(d.events.length<5) d.events.push({label:'',before:'',hot:'',tail:''}); this.setBen(code,d); }
   rmEvent(code,idx){ const d=JSON.parse(JSON.stringify(this.curBen(code))); d.events.splice(idx,1); this.setBen(code,d); }
   updNote(code,val){ const d=JSON.parse(JSON.stringify(this.curBen(code))); d.note=val; this.setBen(code,d); }
-  saveBen(){ const src=this.state.ben||{}; const clean={}; Object.keys(src).forEach(function(code){ const d=src[code]; if(!d)return; const evs=(d.events||[]).filter(function(e){ return (e.label&&e.label.trim())||(e.hot&&e.hot.trim()); }); clean[code]={ events:evs, note:d.note||'' }; }); try{ localStorage.setItem(this.BEN_KEY, JSON.stringify(clean)); }catch(e){} this.setState({ben:clean, benSaved:'저장됨 ✓ · 공개페이지 새로고침 시 반영'}); clearTimeout(this._bt); this._bt=setTimeout(()=>this.setState({benSaved:''}),2400); }
-  resetBen(code){ this.setState(s=>{ const ben=Object.assign({},s.ben); delete ben[code]; try{ localStorage.setItem(this.BEN_KEY, JSON.stringify(ben)); }catch(e){} return {ben, benSaved:'기본값으로 복원됨'}; }); clearTimeout(this._bt); this._bt=setTimeout(()=>this.setState({benSaved:''}),2400); }
+  saveBen(){
+    const src=this.state.ben||{}, self=this;
+    const codes=Object.keys(src);
+    if(!codes.length){ this.setState({benSaved:'변경된 지점이 없습니다'}); return; }
+    if(!window.__hbToken){ alert('로그인이 필요합니다.'); return; }
+    const clean={};
+    codes.forEach(function(code){ const d=src[code]; if(!d) return;
+      const evs=(d.events||[]).filter(function(e){ return (e.label&&e.label.trim())||(e.hot&&e.hot.trim()); });
+      clean[code]={ events:evs, note:d.note||'' }; });
+    this.setState({benSaved:'저장 중…'});
+    Promise.all(Object.keys(clean).map(c=>HBDB.setBenefits(c, clean[c], window.__hbToken)))
+      .then(function(){ self.setState({ben:clean, benSaved:'저장됨 ✓ · 공개페이지에 바로 반영'}); })
+      .catch(function(e){ self.setState({benSaved:''}); alert('저장 실패: '+(e&&e.message||'')); self.loadSettings(); })
+      .then(function(){ clearTimeout(self._bt); self._bt=setTimeout(()=>self.setState({benSaved:''}),2800); });
+  }
+  resetBen(code){
+    const self=this;
+    if(!window.__hbToken){ alert('로그인이 필요합니다.'); return; }
+    this.setState({benSaved:'복원 중…'});
+    HBDB.setBenefits(code, null, window.__hbToken)
+      .then(function(){ self.setState(s=>{ const ben=Object.assign({},s.ben); delete ben[code]; return {ben, benSaved:'기본값으로 복원됨'}; }); })
+      .catch(function(e){ self.setState({benSaved:''}); alert('복원 실패: '+(e&&e.message||'')); })
+      .then(function(){ clearTimeout(self._bt); self._bt=setTimeout(()=>self.setState({benSaved:''}),2800); });
+  }
 
   renderVals(){
     const on=this.state.on||{}; const accent='#B8977E';

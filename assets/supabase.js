@@ -54,15 +54,18 @@
   /* ─── 지점별 룰렛 ON/OFF 조회 ─────────────────────────────
      실패 시 null 을 돌려주고, 호출측은 기존 동작(노출)을 유지한다. */
   function getSettings() {
-    return fetch(REST + '/branch_settings?select=branch,roulette_on', {
+    return fetch(REST + '/branch_settings?select=branch,roulette_on,benefits', {
       headers: headers()
     }).then(function (r) {
       if (!r.ok) return null;
       return r.json();
     }).then(function (rows) {
       if (!rows) return null;
-      var m = {};
-      rows.forEach(function (x) { m[x.branch] = x.roulette_on; });
+      var m = { roulette: {}, benefits: {} };
+      rows.forEach(function (x) {
+        m.roulette[x.branch] = x.roulette_on;
+        if (x.benefits) m.benefits[x.branch] = x.benefits;
+      });
       return m;
     }).catch(function () { return null; });
   }
@@ -111,12 +114,29 @@
     });
   }
 
+  /* ─── 지점 혜택 저장 (로그인 필요) ───────────────────────── */
+  function setBenefits(branch, benefits, token) {
+    return fetch(REST + '/branch_settings?branch=eq.' + encodeURIComponent(branch), {
+      method: 'PATCH',
+      headers: headers(token, { 'Prefer': 'return=representation' }),
+      body: JSON.stringify({ benefits: benefits, updated_at: new Date().toISOString() })
+    }).then(function (r) {
+      if (!r.ok) throw new Error('저장 실패 (' + r.status + ')');
+      return r.json();
+    }).then(function (rows) {
+      /* 권한이 없으면 0건 갱신되고도 200 이 온다. 실제 반영을 확인한다. */
+      if (!rows || !rows.length) throw new Error('권한이 없어 저장되지 않았습니다.');
+      return rows[0];
+    });
+  }
+
   w.HBDB = {
     insertLead: insertLead,
     getSettings: getSettings,
     signIn: signIn,
     listLeads: listLeads,
     setRoulette: setRoulette,
+    setBenefits: setBenefits,
     normPhone: normPhone
   };
 })(window);

@@ -248,7 +248,7 @@ window.HB_ROULETTE_ENABLED = (window.HB_ROULETTE_ENABLED !== false);
       var opened=false;
       function go(){ if(opened) return; opened=true;
         var m=window.__hbSettings;
-        if(m && m[HB_BRANCH]===false) return;   /* 관리자가 끈 지점 */
+        if(m && m.roulette && m.roulette[HB_BRANCH]===false) return;   /* 관리자가 끈 지점 */
         openRoulette(); }
       var t=setTimeout(go, 1500);               /* 응답이 늦으면 기본 노출 */
       (window.__hbSettingsP||Promise.resolve()).then(function(){ clearTimeout(t); go(); });
@@ -270,7 +270,12 @@ window.HB_ROULETTE_ENABLED = (window.HB_ROULETTE_ENABLED !== false);
   }
   function _buildBenefits(data){ if(!data||!data.events||!data.events.length) return ''; var evs=data.events.filter(function(e){ return (e.label&&String(e.label).trim())||(e.hot&&String(e.hot).trim()); }); if(!evs.length) return ''; var bl=evs.map(_benefitBlock); if(data.note&&bl.length){ bl[bl.length-1]=bl[bl.length-1].replace(/<\/div>$/, '<div class="mag-note">'+data.note+'</div></div>'); } return bl.join(''); }
   function _benefitsData(code){
-    try{ var m=JSON.parse(localStorage.getItem('hbBranchBenefits')||'null'); if(m&&m[code]&&m[code].events&&m[code].events.length) return m[code]; }catch(e){}
+    /* 우선순위: 서버(branch_settings.benefits) → branches.js 기본값.
+       서버 조회가 실패하거나 지점에 값이 없으면 기존 동작 그대로. */
+    try{
+      var sv=window.__hbSettings && window.__hbSettings.benefits && window.__hbSettings.benefits[code];
+      if(sv && sv.events && sv.events.length) return sv;
+    }catch(e){}
     var D=window.HB_BENEFITS_DATA||{}; return D[code]||D._default||null;
   }
   function applyBranch(){
