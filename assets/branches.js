@@ -47,8 +47,26 @@ window.HB_BENEFITS_DATA = {
     { label:"최고급 혼주한복", hot:"라벨 업그레이드 or 룰렛상품권", tail:"" },
     { label:"한복 대여", hot:"무료 피팅 3회", tail:" 서비스" }
   ], note:"" },
+  /* 진주 */
   jj: { events:[
     { label:"웨딩촬영용 한복 대여", before:"20만원", hot:"11만원", tail:"" },
     { label:"최고급 혼주한복 대여", before:"33만원", hot:"22만원", tail:"" }
-  ], note:"원단·라벨·종류 상관없이 <b>추가금 NO!</b>" }
+  ], note:"원단·라벨·종류 상관없이 <b>추가금 NO!</b>" },
+  /* 창원/마산 — 진주와 동일 (공유 참조 대신 복제: 한쪽만 바꿔도 다른 쪽이 안 따라가게) */
+  cm: { events:[
+    { label:"웨딩촬영용 한복 대여", before:"20만원", hot:"11만원", tail:"" },
+    { label:"최고급 혼주한복 대여", before:"33만원", hot:"22만원", tail:"" }
+  ], note:"원단·라벨·종류 상관없이 <b>추가금 NO!</b>" },
+  /* 대구 — 이벤트2 만 금액제, 주석은 그 항목에 붙는다 */
+  dg: { events:[
+    { label:"웨딩촬영용 한복 대여", before:"20만원", hot:"11만원", tail:"" },
+    { label:"최고급 혼주한복 대여", before:"33만원", hot:"25만원", tail:"", note:"원단·라벨·종류 상관없이 <b>추가금 NO!</b>" },
+    { label:"한복 대여", hot:"무료 피팅 3회", tail:" 서비스" }
+  ], note:"" },
+  /* 안산 — 대구와 동일 */
+  as: { events:[
+    { label:"웨딩촬영용 한복 대여", before:"20만원", hot:"11만원", tail:"" },
+    { label:"최고급 혼주한복 대여", before:"33만원", hot:"25만원", tail:"", note:"원단·라벨·종류 상관없이 <b>추가금 NO!</b>" },
+    { label:"한복 대여", hot:"무료 피팅 3회", tail:" 서비스" }
+  ], note:"" }
 };

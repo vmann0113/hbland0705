@@ -264,7 +264,9 @@ window.HB_ROULETTE_ENABLED = (window.HB_ROULETTE_ENABLED !== false);
     var benefit=ev.before ? '<s>'+_escH(ev.before)+'</s> → '+hotHtml+_escH(ev.tail||'') : hotHtml+_escH(ev.tail||'');
     return '<div class="'+cls+'"><div class="ev-head"><span class="ev-tag">이벤트 <span class="rn">'+rn+'</span></span><span class="ev-line"></span></div>'
       +'<div class="mag-label">'+_escH(ev.label||'')+'</div>'
-      +'<div class="mag-benefit">'+benefit+'</div></div>';
+      +'<div class="mag-benefit">'+benefit+'</div>'
+      +(ev.note ? '<div class="mag-note">'+ev.note+'</div>' : '')
+      +'</div>';
   }
   function _buildBenefits(data){ if(!data||!data.events||!data.events.length) return ''; var evs=data.events.filter(function(e){ return (e.label&&String(e.label).trim())||(e.hot&&String(e.hot).trim()); }); if(!evs.length) return ''; var bl=evs.map(_benefitBlock); if(data.note&&bl.length){ bl[bl.length-1]=bl[bl.length-1].replace(/<\/div>$/, '<div class="mag-note">'+data.note+'</div></div>'); } return bl.join(''); }
   function _benefitsData(code){
